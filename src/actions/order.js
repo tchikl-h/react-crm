@@ -14,7 +14,8 @@ import {
   ADD_ORDER_FAILURE,
   DELETE_ORDER_REQUEST,
   DELETE_ORDER_SUCCESS,
-  DELETE_ORDER_FAILURE
+  DELETE_ORDER_FAILURE,
+  NEW_ORDER_REQUEST
 } from "../constants";
 
 // Order actions
@@ -22,7 +23,7 @@ import {
 export function loadOrders(filters) {
   return {
     [CALL_API]: {
-      endpoint: "orders?_expand=customer",
+      endpoint: "orders?_expand=bot",
       orders: [],
       filters: filters,
       types: [LOAD_ORDERS_REQUEST, LOAD_ORDERS_SUCCESS, LOAD_ORDERS_FAILURE]
@@ -33,7 +34,7 @@ export function loadOrders(filters) {
 export function getOrder(id) {
   return {
     [CALL_API]: {
-      endpoint: `orders/${id}?_expand=customer`,
+      endpoint: `orders/${id}?_expand=bot`,
       order: {},
       types: [GET_ORDER_REQUEST, GET_ORDER_SUCCESS, GET_ORDER_FAILURE]
     }
@@ -63,6 +64,12 @@ export function addOrder(order) {
       addSuccess: false,
       types: [ADD_ORDER_REQUEST, ADD_ORDER_SUCCESS, ADD_ORDER_FAILURE]
     }
+  };
+}
+
+export function newOrder() {
+  return {
+    type: NEW_ORDER_REQUEST
   };
 }
 

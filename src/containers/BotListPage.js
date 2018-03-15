@@ -26,7 +26,7 @@ import PageBase from "../components/PageBase";
 // import Data from '../data';
 import Pagination from "../components/Pagination";
 import { connect } from "react-redux";
-import { loadCustomers, deleteCustomer } from "../actions/customer";
+import { loadBots, deleteBot } from "../actions/bot";
 import Dialog from "material-ui/Dialog";
 import FlatButton from "material-ui/FlatButton";
 import Drawer from "material-ui/Drawer";
@@ -34,7 +34,7 @@ import RaisedButton from "material-ui/RaisedButton";
 import TextField from "material-ui/TextField";
 import Snackbar from "material-ui/Snackbar";
 
-class CustomerListPage extends React.Component {
+class BotListPage extends React.Component {
   constructor(props) {
     super(props);
 
@@ -54,11 +54,10 @@ class CustomerListPage extends React.Component {
       deselectOnClickaway: true,
       showCheckboxes: false,
       pageOfItems: [],
-      customerId: null,
+      botId: null,
       dialogText: "Are you sure to do this?",
       search: {
-        firstName: "",
-        lastName: ""
+        name: ""
       }
     };
 
@@ -70,8 +69,8 @@ class CustomerListPage extends React.Component {
     this.handleErrorMessage = this.handleErrorMessage.bind(this);
     this.handleSnackBarClose = this.handleSnackBarClose.bind(this);
 
-    if (this.props.customerList || this.props.customerList.length < 1)
-      props.getAllCustomers(this.state.search);
+    if (this.props.botList || this.props.botList.length < 1)
+      props.getAllBots(this.state.search);
   }
 
   componentWillMount() {}
@@ -79,8 +78,8 @@ class CustomerListPage extends React.Component {
   /* eslint-disable */
   componentDidUpdate(prevProps, prevState) {
     // reset page if items array has changed
-    if (this.props.customerList !== prevProps.customerList) {
-      this.onChangePage(this.props.customerList.slice(0, 5));
+    if (this.props.botList !== prevProps.botList) {
+      this.onChangePage(this.props.botList.slice(0, 5));
     }
   }
 
@@ -88,7 +87,7 @@ class CustomerListPage extends React.Component {
     if (
       !this.props.isFetching &&
       this.state.pageOfItems &&
-      this.props.customerList
+      this.props.botList
     )
       this.setState({ pageOfItems: pageOfItems });
   }
@@ -105,21 +104,21 @@ class CustomerListPage extends React.Component {
 
   handleSearch() {
     this.setState({ searchOpen: !this.state.searchOpen });
-    this.props.getAllCustomers(this.state.search);
+    this.props.getAllBots(this.state.search);
   }
 
   handleOpen(id) {
     this.setState({ dialogText: "Are you sure to delete this data?" });
     this.setState({ open: true });
-    this.setState({ customerId: id });
+    this.setState({ botId: id });
   }
 
   handleClose(isConfirmed) {
     this.setState({ open: false });
 
-    if (isConfirmed && this.state.customerId) {
-      this.props.deleteCustomer(this.state.customerId);
-      this.setState({ customerId: null });
+    if (isConfirmed && this.state.botId) {
+      this.props.deleteBot(this.state.botId);
+      this.setState({ botId: null });
     }
   }
 
@@ -127,7 +126,7 @@ class CustomerListPage extends React.Component {
     const field = event.target.name;
 
     if (event && event.target && field) {
-      let search = Object.assign({}, this.state.search);
+      const search = Object.assign({}, this.state.search);
       search[field] = event.target.value;
       this.setState({ search: search });
     }
@@ -156,20 +155,20 @@ class CustomerListPage extends React.Component {
       !nextProps.errorMessage &&
       !nextProps.isFetching
     ) {
-      this.props.getAllCustomers();
+      this.props.getAllBots();
     }
   }
 
   render() {
     const {
       errorMessage,
-      customerList,
+      botList,
       deleteSuccess,
       isFetching
     } = this.props;
 
     //  if ( deleteSuccess && !isFetching){
-    //        this.props.getAllCustomers();
+    //        this.props.getAllBots();
     //  }
     //  else if (!deleteSuccess && errorMessage){
     //    this.handleErrorMessage ();
@@ -247,12 +246,12 @@ class CustomerListPage extends React.Component {
 
     return (
       <PageBase
-        title={"Customers (" + customerList.length + ")"}
-        navigation="Reetek React CRM / Customer"
+        title={"Bots (" + botList.length + ")"}
+        navigation="Reetek React CRM / Bot"
       >
         <div>
           <div>
-            <Link to="/customer">
+            <Link to="/bot">
               <FloatingActionButton
                 backgroundColor="lightblue"
                 secondary={true}
@@ -294,16 +293,10 @@ class CustomerListPage extends React.Component {
               <TableRow>
                 <TableHeaderColumn style={styles.columns.name} />
                 <TableHeaderColumn style={styles.columns.name}>
-                  First Name
+                  Name
                 </TableHeaderColumn>
-                <TableHeaderColumn style={styles.columns.name}>
-                  Last Name
-                </TableHeaderColumn>
-                <TableHeaderColumn style={styles.columns.price}>
-                  Age
-                </TableHeaderColumn>
-                <TableHeaderColumn style={styles.columns.category}>
-                  Status
+                <TableHeaderColumn style={styles.columns.description}>
+                  Description
                 </TableHeaderColumn>
                 <TableHeaderColumn style={styles.columns.edit}>
                   Edit
@@ -322,19 +315,16 @@ class CustomerListPage extends React.Component {
                     <img width={40} src={item.avatar} />
                   </TableRowColumn>
                   <TableRowColumn style={styles.columns.name}>
-                    {item.firstName}
+                    {item.name}
                   </TableRowColumn>
                   <TableRowColumn style={styles.columns.name}>
-                    {item.lastName}
-                  </TableRowColumn>
-                  <TableRowColumn style={styles.columns.price}>
-                    {item.age}
+                    {item.timezone}
                   </TableRowColumn>
                   <TableRowColumn style={styles.columns.category}>
                     {item.isActive ? <CheckCircle /> : <Cancel />}
                   </TableRowColumn>
                   <TableRowColumn style={styles.columns.edit}>
-                    <Link className="button" to={"/customer/" + item.id}>
+                    <Link className="button" to={"/bot/" + item.id}>
                       <FloatingActionButton
                         zDepth={0}
                         mini={true}
@@ -364,7 +354,7 @@ class CustomerListPage extends React.Component {
             <div className={"col-xs-6"}>
               <div className={"box"}>
                 <Pagination
-                  items={customerList}
+                  items={botList}
                   onChangePage={this.onChangePage}
                 />
               </div>
@@ -399,9 +389,9 @@ class CustomerListPage extends React.Component {
             <TextField
               hintText="First Name"
               floatingLabelText="First Name"
-              name="firstName"
+              name="name"
               fullWidth={true}
-              value={this.state.search.firstName}
+              value={this.state.search.name}
               onChange={this.handleSearchFilter}
             />
 
@@ -409,8 +399,8 @@ class CustomerListPage extends React.Component {
               hintText="Last Name"
               floatingLabelText="Last Name"
               fullWidth={true}
-              name="lastName"
-              value={this.state.search.lastName}
+              name="timezone"
+              value={this.state.search.timezone}
               onChange={this.handleSearchFilter}
             />
           </Drawer>
@@ -420,28 +410,28 @@ class CustomerListPage extends React.Component {
   }
 }
 
-CustomerListPage.propTypes = {
+BotListPage.propTypes = {
   isFetching: PropTypes.bool,
-  customerList: PropTypes.array,
-  getAllCustomers: PropTypes.func.isRequired,
-  deleteCustomer: PropTypes.func.isRequired,
+  botList: PropTypes.array,
+  getAllBots: PropTypes.func.isRequired,
+  deleteBot: PropTypes.func.isRequired,
   deleteSuccess: PropTypes.bool.isRequired,
   errorMessage: PropTypes.string
 };
 
 function mapStateToProps(state) {
-  const { customerReducer } = state;
+  const { botReducer } = state;
   const {
-    customerList,
+    botList,
     isFetching,
     deleteSuccess,
     isAuthenticated,
     errorMessage,
     user
-  } = customerReducer;
+  } = botReducer;
 
   return {
-    customerList,
+    botList,
     isFetching,
     isAuthenticated,
     errorMessage,
@@ -452,9 +442,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    getAllCustomers: filters => dispatch(loadCustomers(filters)),
-    deleteCustomer: id => dispatch(deleteCustomer(id))
+    getAllBots: filters => dispatch(loadBots(filters)),
+    deleteBot: id => dispatch(deleteBot(id))
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CustomerListPage);
+export default connect(mapStateToProps, mapDispatchToProps)(BotListPage);

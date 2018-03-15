@@ -1,27 +1,26 @@
 import {
-  LOAD_CUSTOMERS_REQUEST,
-  LOAD_CUSTOMERS_SUCCESS,
-  LOAD_CUSTOMERS_FAILURE,
-  GET_CUSTOMER_REQUEST,
-  GET_CUSTOMER_SUCCESS,
-  GET_CUSTOMER_FAILURE,
-  UPDATE_CUSTOMER_REQUEST,
-  UPDATE_CUSTOMER_SUCCESS,
-  UPDATE_CUSTOMER_FAILURE,
-  ADD_CUSTOMER_REQUEST,
-  ADD_CUSTOMER_SUCCESS,
-  ADD_CUSTOMER_FAILURE,
-  DELETE_CUSTOMER_REQUEST,
-  DELETE_CUSTOMER_SUCCESS,
-  DELETE_CUSTOMER_FAILURE
-
-  // UPDATE_CUSTOMER_RESET, ADD_CUSTOMER_RESET, DELETE_CUSTOMER_RESET
+  LOAD_BotS_REQUEST,
+  LOAD_BotS_SUCCESS,
+  LOAD_BotS_FAILURE,
+  GET_Bot_REQUEST,
+  GET_Bot_SUCCESS,
+  GET_Bot_FAILURE,
+  UPDATE_Bot_REQUEST,
+  UPDATE_Bot_SUCCESS,
+  UPDATE_Bot_FAILURE,
+  ADD_Bot_REQUEST,
+  ADD_Bot_SUCCESS,
+  ADD_Bot_FAILURE,
+  DELETE_Bot_REQUEST,
+  DELETE_Bot_SUCCESS,
+  DELETE_Bot_FAILURE,
+  NEW_Bot_REQUEST
 } from "../constants";
 
-export function customerReducer(
+export function botReducer(
   state = {
     isFetching: false,
-    customerList: [],
+    botList: [],
     authenticated: localStorage.getItem("token") ? true : false,
     user: localStorage.getItem("user")
       ? JSON.parse(localStorage.getItem("user"))
@@ -34,26 +33,23 @@ export function customerReducer(
   action
 ) {
   switch (action.type) {
-    case LOAD_CUSTOMERS_REQUEST:
+    case LOAD_BotS_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
         filters: action.filters
       });
-    case LOAD_CUSTOMERS_SUCCESS:
+    case LOAD_BotS_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
-        customerList: action.response
+        botList: action.response
           ? JSON.parse(action.response).filter(e => {
               if (action.filters) {
-                if (action.filters.firstName && action.filters.lastName)
+                if (action.filters.name)
                   return (
-                    e.firstName.indexOf(action.filters.firstName) > -1 &&
-                    e.lastName.indexOf(action.filters.lastName) > -1
+                    e.name.indexOf(action.filters.name) > -1
                   );
-                else if (action.filters.firstName)
-                  return e.firstName.indexOf(action.filters.firstName) > -1;
-                else if (action.filters.lastName)
-                  return e.lastName.indexOf(action.filters.lastName) > -1;
+                else if (action.filters.name)
+                  return e.name.indexOf(action.filters.name) > -1;
               }
               return true;
             })
@@ -63,75 +59,81 @@ export function customerReducer(
         deleteSuccess: false,
         errorMessage: null
       });
-    case LOAD_CUSTOMERS_FAILURE:
+    case LOAD_BotS_FAILURE:
       return Object.assign({}, state, {
         isFetching: false,
         errorMessage: action.message
       });
-    case GET_CUSTOMER_REQUEST:
+    case GET_Bot_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
         authenticated: action.authenticated || false
       });
-    case GET_CUSTOMER_SUCCESS:
+    case GET_Bot_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
-        customer: JSON.parse(action.response),
+        bot: JSON.parse(action.response),
         authenticated: action.authenticated || false
       });
-    case GET_CUSTOMER_FAILURE:
+    case GET_Bot_FAILURE:
       return Object.assign({}, state, {
         isFetching: false,
         errorMessage: action.message
       });
-    case UPDATE_CUSTOMER_REQUEST:
+    case UPDATE_Bot_REQUEST:
       return Object.assign({}, state, {
         isFetching: true
       });
-    case UPDATE_CUSTOMER_SUCCESS:
+    case UPDATE_Bot_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
         updateSuccess: true,
         authenticated: action.authenticated || false,
         updateError: null
       });
-    case UPDATE_CUSTOMER_FAILURE:
+    case UPDATE_Bot_FAILURE:
       return Object.assign({}, state, {
         isFetching: false,
-        customer: {},
+        bot: {},
         errorMessage: action.error.statusText || action.error.status,
         updateSuccess: false,
         updateError: action.message
       });
-    case ADD_CUSTOMER_REQUEST:
+    case NEW_Bot_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: false,
+        bot: {},
+        errorMessage: action.message
+      });
+    case ADD_Bot_REQUEST:
       return Object.assign({}, state, {
         isFetching: true
       });
-    case ADD_CUSTOMER_SUCCESS:
+    case ADD_Bot_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
         addSuccess: true,
         authenticated: action.authenticated || false
       });
-    case ADD_CUSTOMER_FAILURE:
+    case ADD_Bot_FAILURE:
       return Object.assign({}, state, {
         isFetching: false,
         errorMessage: action.error.statusText || action.error.status,
         addSuccess: false
       });
-    case DELETE_CUSTOMER_REQUEST:
+    case DELETE_Bot_REQUEST:
       return Object.assign({}, state, {
         isFetching: true
       });
-    case DELETE_CUSTOMER_SUCCESS:
+    case DELETE_Bot_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
-        // customer: customer,
+        // bot: bot,
         deleteSuccess: true,
         action: action,
         authenticated: action.authenticated || false
       });
-    case DELETE_CUSTOMER_FAILURE:
+    case DELETE_Bot_FAILURE:
       return Object.assign({}, state, {
         isFetching: false,
         errorMessage: action.error.statusText || action.error.status,

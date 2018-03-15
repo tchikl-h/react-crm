@@ -17,13 +17,52 @@ import BrowserUsage from "../components/dashboard/BrowserUsage";
 import LineBarChart from "../components/dashboard/LineBarChart";
 import globalStyles from "../styles";
 import Data from "../data";
+import FloatingActionButton from "material-ui/FloatingActionButton";
+import { Link } from "react-router";
+import ContentCreate from "material-ui/svg-icons/content/create";
+import {
+  pink500,
+  grey200,
+  grey500,
+  green400,
+  white
+} from "material-ui/styles/colors";
+import ContentAdd from "material-ui/svg-icons/content/add";
 
 const DashboardPage = () => {
+  const styles = {
+    editButton: {
+      paddingRight: 25,
+      paddingBottom: 15,
+      display: "block"
+    },
+    editButtonIcon: {
+      fill: white
+    },
+    fab: {
+      // margin: 0,
+      left: 20,
+      top: 60,
+      left: "auto",
+      position: "fixed",
+      marginLeft: 180
+    },
+  };
   return (
     <div>
       <h3 style={globalStyles.navigation}>Application / Dashboard</h3>
 
       <div className="row">
+      <Link to="/bot">
+        <FloatingActionButton
+          backgroundColor="lightblue"
+          secondary={true}
+          style={styles.fab}
+          backgroundColor={pink500}
+        >
+          <ContentAdd />
+        </FloatingActionButton>
+      </Link>
         <div className="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-b-15 ">
           <InfoBox
             Icon={ShoppingCart}

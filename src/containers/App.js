@@ -38,8 +38,9 @@ class App extends React.Component {
       isFetching
     } = this.props;
 
-    const firstName = user && user.firstName ? user.firstName : "";
-    const lastName = user && user.lastName ? user.lastName : "";
+    const name = user && user.name ? user.name : "";
+    const description = user && user.description ? user.description : "";
+    const timezone = user && user.timezone ? user.timezone : "";
 
     let { navDrawerOpen } = this.state;
     const paddingLeftDrawerOpen = 250;
@@ -74,7 +75,7 @@ class App extends React.Component {
                   navDrawerOpen={navDrawerOpen}
                   menus={Data.menus}
                   signOutMenus={Data.signOutMenus}
-                  username={`${firstName} ${lastName}`}
+                  username={`${name}`}
                   onLogoutClick={() => dispatch(logoutUser())}
                 />
 

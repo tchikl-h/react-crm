@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
 import { auth } from "./auth";
-import { customerReducer } from "./customer";
+import { botReducer } from "./bot";
 
 import { orderReducer } from "./order";
 
@@ -8,7 +8,7 @@ import { productReducer } from "./product";
 
 const reducers = combineReducers({
   auth,
-  customerReducer,
+  botReducer,
   orderReducer,
   productReducer
 });

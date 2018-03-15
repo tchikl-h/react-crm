@@ -145,7 +145,7 @@ class OrderListPage extends React.Component {
     const field = event.target.name;
 
     if (event && event.target && field) {
-      let search = Object.assign({}, this.state.search);
+      const search = Object.assign({}, this.state.search);
       search[field] = event.target.value;
 
       this.setState({ search: search });
@@ -293,7 +293,7 @@ class OrderListPage extends React.Component {
                   Shipped Date
                 </TableHeaderColumn>
                 <TableHeaderColumn style={styles.columns.name}>
-                  Customer
+                  Bot
                 </TableHeaderColumn>
                 {/*<TableHeaderColumn style={styles.columns.category}>Status</TableHeaderColumn>*/}
                 <TableHeaderColumn style={styles.columns.edit}>
@@ -326,8 +326,8 @@ class OrderListPage extends React.Component {
                   </TableRowColumn>
                   {/*<TableRowColumn style={styles.columns.price}>{item.quantity * item.price}</TableRowColumn>*/}
                   <TableRowColumn style={styles.columns.category}>
-                    {item.customer
-                      ? item.customer.firstName + " " + item.customer.lastName
+                    {item.bot
+                      ? item.bot.name
                       : ""}
                   </TableRowColumn>
                   <TableRowColumn style={styles.columns.edit}>
