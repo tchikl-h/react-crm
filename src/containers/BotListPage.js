@@ -204,20 +204,20 @@ class BotListPage extends React.Component {
         fill: grey500
       },
       columns: {
-        id: {
+        name: {
           width: "10%"
         },
-        name: {
-          width: "40%"
+        description: {
+          width: "10%"
         },
-        price: {
-          width: "20%"
+        nameTag: {
+          width: "5%"
         },
-        category: {
-          width: "20%"
+        descriptionTag: {
+          width: "10%"
         },
         edit: {
-          width: "20%"
+          width: "10%"
         }
       },
       dialog: {
@@ -242,7 +242,7 @@ class BotListPage extends React.Component {
         value={true}
         onTouchTap={() => this.handleClose(true)}
       />
-    ];
+    ]
 
     return (
       <PageBase
@@ -291,15 +291,12 @@ class BotListPage extends React.Component {
               enableSelectAll={this.state.enableSelectAll}
             >
               <TableRow>
-                <TableHeaderColumn style={styles.columns.name} />
-                <TableHeaderColumn style={styles.columns.name}>
+                <TableHeaderColumn style={styles.columns.nameTag}/>
+                <TableHeaderColumn style={styles.columns.nameTag}>
                   Name
                 </TableHeaderColumn>
-                <TableHeaderColumn style={styles.columns.description}>
+                <TableHeaderColumn style={styles.columns.descriptionTag}>
                   Description
-                </TableHeaderColumn>
-                <TableHeaderColumn style={styles.columns.edit}>
-                  Edit
                 </TableHeaderColumn>
               </TableRow>
             </TableHeader>
@@ -317,11 +314,8 @@ class BotListPage extends React.Component {
                   <TableRowColumn style={styles.columns.name}>
                     {item.name}
                   </TableRowColumn>
-                  <TableRowColumn style={styles.columns.name}>
-                    {item.timezone}
-                  </TableRowColumn>
-                  <TableRowColumn style={styles.columns.category}>
-                    {item.isActive ? <CheckCircle /> : <Cancel />}
+                  <TableRowColumn style={styles.columns.description}>
+                    {item.description}
                   </TableRowColumn>
                   <TableRowColumn style={styles.columns.edit}>
                     <Link className="button" to={"/bot/" + item.id}>

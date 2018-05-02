@@ -28,6 +28,10 @@ import {
   white
 } from "material-ui/styles/colors";
 import ContentAdd from "material-ui/svg-icons/content/add";
+import BotListPage from "./BotListPage";
+import botReducer from "../reducers";
+require("babel-core/register");
+require("babel-polyfill");
 
 const DashboardPage = () => {
   const styles = {
@@ -48,75 +52,94 @@ const DashboardPage = () => {
       marginLeft: 180
     },
   };
-  return (
-    <div>
-      <h3 style={globalStyles.navigation}>Application / Dashboard</h3>
 
-      <div className="row">
-      <Link to="/bot">
-        <FloatingActionButton
-          backgroundColor="lightblue"
-          secondary={true}
-          style={styles.fab}
-          backgroundColor={pink500}
-        >
-          <ContentAdd />
-        </FloatingActionButton>
-      </Link>
-        <div className="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-b-15 ">
-          <InfoBox
-            Icon={ShoppingCart}
-            color={pink600}
-            title="Total Profit"
-            value="1500k"
-          />
+  function requestAPI(method, url) {
+    return new Promise((resolve, reject) => {
+      var xhr = new XMLHttpRequest();
+      xhr.open(method, url);
+      xhr.responseType = 'json';
+      xhr.onload = function() {
+        var status = xhr.status;
+        if (status === 200) {
+          resolve(xhr.response);
+        } else {
+          reject(xhr.statusText);
+        }
+      };
+      xhr.onerror = function () {
+        reject(xhr.statusText);
+      };
+      xhr.send();
+    })
+  }
+
+  var DisplayBotList = (nbBot) => {
+    var indents = [];
+    for (var i = 0; i < nbBot; i++) {
+      indents.push(<span className='indent' key={i}><div className="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-b-15 ">
+      <InfoBox
+        Icon={Face}
+        color={orange600}
+        title={"New Members"}
+        value={"ok"}
+      />
+    </div></span>);
+    }
+    return (
+      <div>
+        <h3 style={globalStyles.navigation}>Application / Dashboard</h3>
+  
+        <div className="row">
+        <Link to="/bot">
+          <FloatingActionButton
+            backgroundColor="lightblue"
+            secondary={true}
+            style={styles.fab}
+            backgroundColor={pink500}
+          >
+            <ContentAdd />
+          </FloatingActionButton>
+        </Link>
+  
+        {indents}
         </div>
-
-        <div className="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-b-15 ">
-          <InfoBox Icon={ThumbUp} color={cyan600} title="Likes" value="4231" />
+  
+        <div className="row">
+          <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-md m-b-15">
+            <NewOrders data={Data.dashBoardPage.newOrders} />
+          </div>
+  
+          <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 m-b-15">
+            <MonthlySales data={Data.dashBoardPage.monthlySales} />
+          </div>
         </div>
-
-        <div className="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-b-15 ">
-          <InfoBox
-            Icon={Assessment}
-            color={purple600}
-            title="Sales"
-            value="460"
-          />
-        </div>
-
-        <div className="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-b-15 ">
-          <InfoBox
-            Icon={Face}
-            color={orange600}
-            title="New Members"
-            value="248"
-          />
+  
+        <div className="row">
+          <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-b-15 ">
+            {/*<RecentlyProducts data={Data.dashBoardPage.recentProducts}/>*/}
+            <LineBarChart data={Data.dashBoardPage.lineBarChart} />
+          </div>
+  
+          <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-b-15 ">
+            <BrowserUsage data={Data.dashBoardPage.browserUsage} />
+          </div>
         </div>
       </div>
+    );
+  }
 
-      <div className="row">
-        <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-md m-b-15">
-          <NewOrders data={Data.dashBoardPage.newOrders} />
-        </div>
-
-        <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 m-b-15">
-          <MonthlySales data={Data.dashBoardPage.monthlySales} />
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-b-15 ">
-          {/*<RecentlyProducts data={Data.dashBoardPage.recentProducts}/>*/}
-          <LineBarChart data={Data.dashBoardPage.lineBarChart} />
-        </div>
-
-        <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-b-15 ">
-          <BrowserUsage data={Data.dashBoardPage.browserUsage} />
-        </div>
-      </div>
-    </div>
-  );
+  requestAPI('GET', 'http://localhost:5354/bots')
+    .then(function (botList) {
+      console.log("return 1")
+      return DisplayBotList(botList.length); // Appel asynchrone avec promise (success)
+    })
+    .catch(function (err) {
+      return DisplayBotList(0); // Appel asynchrone avec promise (error)
+      console.error('Augh, there was an error!', err.statusText);
+    });
+  console.log("return 2"); // retour basique
+  return DisplayBotList(4);
+  
 };
 
 export default DashboardPage;
