@@ -201,6 +201,15 @@ class IntentListPage extends React.Component {
           width: "10%"
         },
         name: {
+          width: "40%"
+        },
+        bot: {
+          width: "20%"
+        },
+        intentName: {
+          width: "20%"
+        },
+        response: {
           width: "20%"
         },
         price: {
@@ -276,28 +285,16 @@ class IntentListPage extends React.Component {
               enableSelectAll={this.state.enableSelectAll}
             >
               <TableRow>
-                <TableHeaderColumn style={styles.columns.name}>
-                  Reference
-                </TableHeaderColumn>
-                {/*<TableHeaderColumn style={styles.columns.name}>Price</TableHeaderColumn>*/}
-                <TableHeaderColumn style={styles.columns.price}>
-                  Quantity
-                </TableHeaderColumn>
-                <TableHeaderColumn style={styles.columns.price}>
-                  Amount
-                </TableHeaderColumn>
-                <TableHeaderColumn style={styles.columns.price}>
-                  Intent Date
-                </TableHeaderColumn>
-                <TableHeaderColumn style={styles.columns.price}>
-                  Shipped Date
-                </TableHeaderColumn>
-                <TableHeaderColumn style={styles.columns.name}>
+                <TableHeaderColumn style={styles.columns.bot}>
                   Bot
                 </TableHeaderColumn>
+                {/*<TableHeaderColumn style={styles.columns.name}>Price</TableHeaderColumn>*/}
+                <TableHeaderColumn style={styles.columns.intentName}>
+                  Intent's name
+                </TableHeaderColumn>
                 {/*<TableHeaderColumn style={styles.columns.category}>Status</TableHeaderColumn>*/}
-                <TableHeaderColumn style={styles.columns.edit}>
-                  Edit
+                <TableHeaderColumn style={styles.columns.name}>
+                  Response
                 </TableHeaderColumn>
               </TableRow>
             </TableHeader>
@@ -309,24 +306,14 @@ class IntentListPage extends React.Component {
             >
               {this.state.pageOfItems.map(item => (
                 <TableRow key={item.id}>
-                  <TableRowColumn style={styles.columns.name}>
-                    {item.reference}
-                  </TableRowColumn>
-                  <TableRowColumn style={styles.columns.price}>
-                    {`null`}
-                  </TableRowColumn>
-                  <TableRowColumn style={styles.columns.price}>
-                    AUD ${item.amount}
-                  </TableRowColumn>
-                  <TableRowColumn style={styles.columns.price}>
-                    {item.intentDate}
-                  </TableRowColumn>
-                  <TableRowColumn style={styles.columns.price}>
-                    {item.shippedDate}
-                  </TableRowColumn>
-                  {/*<TableRowColumn style={styles.columns.price}>{item.quantity * item.price}</TableRowColumn>*/}
-                  <TableRowColumn style={styles.columns.category}>
+                  <TableRowColumn style={styles.columns.bot}>
                     {item.bot}
+                  </TableRowColumn>
+                  <TableRowColumn style={styles.columns.intentName}>
+                    {item.intentName}
+                  </TableRowColumn>
+                  <TableRowColumn style={styles.columns.response}>
+                    {item.response}
                   </TableRowColumn>
                   <TableRowColumn style={styles.columns.edit}>
                     <Link className="button" to={"/intent/" + item.id}>

@@ -23,7 +23,7 @@ import {
 export function loadIntents(filters) {
   return {
     [CALL_API]: {
-      endpoint: "intents?_expand=reference",
+      endpoint: "intents?_expand=response",
       intents: [],
       filters: filters,
       types: [LOAD_INTENTS_REQUEST, LOAD_INTENTS_SUCCESS, LOAD_INTENTS_FAILURE]
@@ -34,7 +34,7 @@ export function loadIntents(filters) {
 export function getIntent(id) {
   return {
     [CALL_API]: {
-      endpoint: `intents/${id}?_expand=reference`,
+      endpoint: `intents/${id}?_expand=response`,
       intent: {},
       types: [GET_INTENT_REQUEST, GET_INTENT_SUCCESS, GET_INTENT_FAILURE]
     }

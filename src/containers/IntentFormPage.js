@@ -234,7 +234,7 @@ class IntentFormPage extends React.Component {
     } else {
       botName = botList[window.location.href.split("/")[4] - 1].name;
       return (
-        <PageBase title="Intent" navigation="Application / Intent ">
+        <PageBase title={botName+" - Intent"} navigation="Application / Intent ">
           <Formsy.Form
             onValid={this.enableButton}
             onInvalid={this.disableButton}
@@ -244,200 +244,41 @@ class IntentFormPage extends React.Component {
             <GridList cols={3} cellHeight={60}>
             <GridTile>
                 <FormsyText
-                  hintText="Bot"
-                  floatingLabelText="Bot"
-                  name="bot"
-                  fullWidth={true}
-                  defaultValue={botList[window.location.href.split("/")[4] - 1].name}
-                  required
-                  readOnly
-                />
-              </GridTile>
-              <GridTile>
-                <FormsyText
-                  hintText="Reference"
-                  floatingLabelText="Reference"
-                  name="reference"
+                  hintText="Intent's name"
+                  floatingLabelText="Intent's name"
+                  name="intentName"
                   onChange={this.handleChange}
                   fullWidth={true}
-                  value={intent.reference ? intent.reference : ""}
+                  value={intent.intentName ? intent.intentName : ""}
                   validations={{
                     isWords: true
                   }}
                   validationErrors={{
-                    isWords: "Please provide valid reference name",
-                    isDefaultRequiredValue: "This is a required field"
-                  }}
-                  required
-                />
-              </GridTile>
-
-              <GridTile>
-                <FormsyText
-                  hintText="Amount"
-                  floatingLabelText="Amount"
-                  fullWidth={true}
-                  name="price"
-                  onChange={this.handleChange}
-                  validations={{
-                    isNumeric: true
-                  }}
-                  validationErrors={{
-                    isNumeric: "Please provide valid price",
-                    isDefaultRequiredValue: "This is a required field"
-                  }}
-                  value={intent.amount}
-                  required
-                />
-              </GridTile>
-
-              <GridTile>
-                <FormsyText
-                  hintText="Quantity"
-                  floatingLabelText="Quantity"
-                  fullWidth={true}
-                  type="number"
-                  name="quantity"
-                  onChange={this.handleChange}
-                  value={intent.products ? intent.products.length : 0}
-                  validations={{
-                    isInt: true
-                  }}
-                  validationErrors={{
-                    isInt: "Please provide a valid password",
+                    isWords: "Please provide valid intent name",
                     isDefaultRequiredValue: "This is a required field"
                   }}
                   required
                 />
               </GridTile>
               <GridTile>
-                <FormsyDate
-                  hintText="Intent Date"
-                  floatingLabelText="Intent Date"
-                  disabled={true}
-                  name="intentDate"
-                  onChange={this.handleChange}
-                  value={
-                    intent.intentDate ? new Date(intent.intentDate) : new Date()
-                  }
-                  required
-                />
-              </GridTile>
-
-              <GridTile>
-                <FormsyDate
-                  hintText="Shipped Date"
-                  floatingLabelText="Shipped Date"
-                  fullWidth={false}
-                  name="shippedDate"
-                  onChange={this.handleChange}
-                  value={
-                    intent.shippedDate ? new Date(intent.shippedDate) : new Date()
-                  }
-                  required
-                />
-              </GridTile>
-
-              <GridTile>
                 <FormsyText
-                  hintText="City"
-                  floatingLabelText="City"
-                  name="reference"
+                  hintText="Response"
+                  floatingLabelText="Response"
+                  name="response"
                   onChange={this.handleChange}
                   fullWidth={true}
-                  value={
-                    intent.shipAddress && intent.shipAddress.city
-                      ? intent.shipAddress.city
-                      : ""
-                  }
+                  value={intent.response ? intent.response : ""}
                   validations={{
                     isWords: true
                   }}
                   validationErrors={{
-                    isWords: "Please provide valid city",
-                    isDefaultRequiredValue: "This is a required field"
-                  }}
-                  required
-                />
-              </GridTile>
-
-              <GridTile>
-                <FormsyText
-                  hintText="Country"
-                  floatingLabelText="Country"
-                  name="reference"
-                  onChange={this.handleChange}
-                  fullWidth={true}
-                  value={
-                    intent.shipAddress && intent.shipAddress.country
-                      ? intent.shipAddress.country
-                      : ""
-                  }
-                  validations={{
-                    isWords: true
-                  }}
-                  validationErrors={{
-                    isWords: "Please provide valid country",
-                    isDefaultRequiredValue: "This is a required field"
-                  }}
-                  required
-                />
-              </GridTile>
-
-              <GridTile>
-                <FormsyText
-                  hintText="Zip Code"
-                  floatingLabelText="Zip Code"
-                  name="reference"
-                  onChange={this.handleChange}
-                  fullWidth={true}
-                  value={
-                    intent.shipAddress && intent.shipAddress.zipcode
-                      ? intent.shipAddress.zipcode
-                      : ""
-                  }
-                  validations={{
-                    isWords: true
-                  }}
-                  validationErrors={{
-                    isWords: "Please provide valid zip code",
+                    isWords: "Please provide valid response name",
                     isDefaultRequiredValue: "This is a required field"
                   }}
                   required
                 />
               </GridTile>
             </GridList>
-
-            <p style={styles.productList}>Product List: </p>
-            <Divider />
-
-            {intent.products && (
-              <div>
-                <GridList cols={1} cellHeight={60}>
-                  {intent.products.map((product, index) => (
-                    <GridTile key={index}>
-                      <div style={styles.productItem}>
-                        <span>
-                          {product.productName}
-                          <p>
-                            {" "}
-                            Price: AUD ${product.unitPrice}
-                            <IconButton
-                              style={styles.productDeleteIcon}
-                              onClick={() => this.removeProduct(product)}
-                            >
-                              <ActionDelete />
-                            </IconButton>
-                          </p>
-                        </span>
-                      </div>
-                    </GridTile>
-                  ))}
-                </GridList>
-              </div>
-            )}
-
-            <Divider />
 
             <div style={styles.buttons}>
               <Link to="/intents">
