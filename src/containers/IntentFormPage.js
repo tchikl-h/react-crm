@@ -15,7 +15,7 @@ import { connect } from "react-redux";
 import { GridList, GridTile } from "material-ui/GridList";
 // import {Card} from 'material-ui/Card';
 import ActionDelete from "material-ui/svg-icons/action/delete";
-import { getOrder, updateOrder, addOrder, newOrder } from "../actions/order";
+import { getIntent, updateIntent, addIntent, newIntent } from "../actions/intent";
 import { loadBots } from "../actions/bot";
 import { loadProducts, loadCategories } from "../actions/product";
 
@@ -24,8 +24,8 @@ import Formsy from "formsy-react";
 import MenuItem from "material-ui/MenuItem";
 import CircularProgress from "material-ui/CircularProgress";
 import autoBind from "react-autobind";
-
-class OrderFormPage extends React.Component {
+let botName;
+class IntentFormPage extends React.Component {
   constructor(props) {
     super(props);
     autoBind(this);
@@ -34,7 +34,7 @@ class OrderFormPage extends React.Component {
       categoryId: 0,
       product: null,
       open: false,
-      order: {}
+      intent: {}
     };
 
     // autobind(this);
@@ -52,23 +52,23 @@ class OrderFormPage extends React.Component {
 
   componentWillMount() {
     if (this.props.routeParams && this.props.routeParams.id) {
-      this.props.getOrder(this.props.routeParams.id);
+      this.props.getIntent(this.props.routeParams.id);
       this.props.getAllBots();
       this.props.getCategoryList();
     } else {
-      this.props.newOrder();
+      this.props.newIntent();
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (
-      (this.props.order &&
-        nextProps.order &&
-        this.props.order.id != nextProps.order.id) ||
-      this.props.order != nextProps.order
+      (this.props.intent &&
+        nextProps.intent &&
+        this.props.intent.id != nextProps.intent.id) ||
+      this.props.intent != nextProps.intent
     ) {
       this.setState({ isFetching: false });
-      this.setState({ order: Object.assign({}, nextProps.order) });
+      this.setState({ intent: Object.assign({}, nextProps.intent) });
     }
 
     if (nextProps.productList) {
@@ -79,12 +79,12 @@ class OrderFormPage extends React.Component {
       (!this.props.addSuccess && nextProps.addSuccess) ||
       (!this.props.updateSuccess && nextProps.updateSuccess)
     ) {
-      this.props.router.push("/orders");
+      this.props.router.push("/intents");
     }
   }
 
   disableButton() {
-    if (this.state.order.products <= 0) {
+    if (this.state.intent.products <= 0) {
       this.setState({
         canSubmit: false
       });
@@ -101,8 +101,12 @@ class OrderFormPage extends React.Component {
     if (action && action === "AddProduct") {
       this.setState({ open: true });
     } else {
-      if (this.state.order.id) this.props.updateOrder(this.state.order);
-      else this.props.addOrder(this.state.order);
+      if (this.state.intent.id) {
+        this.props.updateIntent(this.state.intent);
+      }
+      else {
+        this.props.addIntent(this.state.intent);
+      }
     }
   }
 
@@ -114,18 +118,20 @@ class OrderFormPage extends React.Component {
 
   handleChange(event, date) {
     const field = event ? event.target.name : null;
-    const { order } = this.state;
+    const { intent } = this.state;
 
-    if (order) {
+    if (intent) {
       if (typeof date === "object") {
-        let order = Object.assign({}, order);
-        order.shippedDate = date.toLocaleDateString();
-        this.setState({ order: order });
+        let intent = Object.assign({}, intent);
+        intent.shippedDate = date.toLocaleDateString();
+        this.setState({ intent: intent });
         this.enableButton();
       } else if (event && event.target && field) {
-        let _order = Object.assign({}, order);
-        _order[field] = event.target.value;
-        this.setState({ order: _order });
+        let _intent = Object.assign({}, intent);
+        _intent[field] = event.target.value;
+        this.setState({ intent: _intent });
+        _intent["bot"] = botName;
+        this.setState({ intent: _intent });
         this.enableButton();
       }
     }
@@ -133,12 +139,12 @@ class OrderFormPage extends React.Component {
 
   removeProduct(product) {
     if (product) {
-      this.state.order.products.splice(
-        this.state.order.products.indexOf(product),
+      this.state.intent.products.splice(
+        this.state.intent.products.indexOf(product),
         1
       );
-      this.setState({ order: this.state.order });
-      if (this.state.order.products.length > 0) this.enableButton();
+      this.setState({ intent: this.state.intent });
+      if (this.state.intent.products.length > 0) this.enableButton();
     }
   }
 
@@ -147,12 +153,12 @@ class OrderFormPage extends React.Component {
   }
 
   handleOk() {
-    const { order } = this.state;
+    const { intent } = this.state;
 
-    order.products = order.products || [];
-    order.products.push(this.state.product);
+    intent.products = intent.products || [];
+    intent.products.push(this.state.product);
     this.setState({ open: false });
-    this.setState({ order: this.state.order });
+    this.setState({ intent: this.state.intent });
     this.enableButton();
   }
 
@@ -174,7 +180,7 @@ class OrderFormPage extends React.Component {
       productList
     } = this.props;
 
-    const { isFetching, order } = this.state;
+    const { isFetching, intent } = this.state;
 
     const styles = {
       toggleDiv: {
@@ -226,8 +232,9 @@ class OrderFormPage extends React.Component {
     if (isFetching) {
       return <CircularProgress />;
     } else {
+      botName = botList[window.location.href.split("/")[4] - 1].name;
       return (
-        <PageBase title="Order" navigation="Application / Order ">
+        <PageBase title="Intent" navigation="Application / Intent ">
           <Formsy.Form
             onValid={this.enableButton}
             onInvalid={this.disableButton}
@@ -235,28 +242,16 @@ class OrderFormPage extends React.Component {
             onInvalidSubmit={this.notifyFormError}
           >
             <GridList cols={3} cellHeight={60}>
-              <GridTile>
-                <FormsySelect
+            <GridTile>
+                <FormsyText
+                  hintText="Bot"
                   floatingLabelText="Bot"
-                  value={order.bot ? order.bot.id : 0}
-                  onChange={this.handleChange}
-                  style={styles.customWidth}
-                  name="botId"
-                >
-                  {botList.map((bot, index) => (
-                    <MenuItem
-                      key={index}
-                      name="botId"
-                      value={bot.id}
-                      style={styles.menuItem}
-                      primaryText={
-                        bot.name
-                          ? bot.name
-                          : ""
-                      }
-                    />
-                  ))}
-                </FormsySelect>
+                  name="bot"
+                  fullWidth={true}
+                  defaultValue={botList[window.location.href.split("/")[4] - 1].name}
+                  required
+                  readOnly
+                />
               </GridTile>
               <GridTile>
                 <FormsyText
@@ -265,7 +260,7 @@ class OrderFormPage extends React.Component {
                   name="reference"
                   onChange={this.handleChange}
                   fullWidth={true}
-                  value={order.reference ? order.reference : ""}
+                  value={intent.reference ? intent.reference : ""}
                   validations={{
                     isWords: true
                   }}
@@ -291,7 +286,7 @@ class OrderFormPage extends React.Component {
                     isNumeric: "Please provide valid price",
                     isDefaultRequiredValue: "This is a required field"
                   }}
-                  value={order.amount}
+                  value={intent.amount}
                   required
                 />
               </GridTile>
@@ -304,7 +299,7 @@ class OrderFormPage extends React.Component {
                   type="number"
                   name="quantity"
                   onChange={this.handleChange}
-                  value={order.products ? order.products.length : 0}
+                  value={intent.products ? intent.products.length : 0}
                   validations={{
                     isInt: true
                   }}
@@ -317,13 +312,13 @@ class OrderFormPage extends React.Component {
               </GridTile>
               <GridTile>
                 <FormsyDate
-                  hintText="Order Date"
-                  floatingLabelText="Order Date"
+                  hintText="Intent Date"
+                  floatingLabelText="Intent Date"
                   disabled={true}
-                  name="orderDate"
+                  name="intentDate"
                   onChange={this.handleChange}
                   value={
-                    order.orderDate ? new Date(order.orderDate) : new Date()
+                    intent.intentDate ? new Date(intent.intentDate) : new Date()
                   }
                   required
                 />
@@ -337,31 +332,8 @@ class OrderFormPage extends React.Component {
                   name="shippedDate"
                   onChange={this.handleChange}
                   value={
-                    order.shippedDate ? new Date(order.shippedDate) : new Date()
+                    intent.shippedDate ? new Date(intent.shippedDate) : new Date()
                   }
-                  required
-                />
-              </GridTile>
-
-              <GridTile>
-                <FormsyText
-                  hintText="Address"
-                  floatingLabelText="Address"
-                  name="shipAddress.address"
-                  onChange={this.handleChange}
-                  fullWidth={true}
-                  value={
-                    order.shipAddress && order.shipAddress.address
-                      ? order.shipAddress.address
-                      : ""
-                  }
-                  validations={{
-                    isWords: true
-                  }}
-                  validationErrors={{
-                    isWords: "Please provide valid address",
-                    isDefaultRequiredValue: "This is a required field"
-                  }}
                   required
                 />
               </GridTile>
@@ -374,8 +346,8 @@ class OrderFormPage extends React.Component {
                   onChange={this.handleChange}
                   fullWidth={true}
                   value={
-                    order.shipAddress && order.shipAddress.city
-                      ? order.shipAddress.city
+                    intent.shipAddress && intent.shipAddress.city
+                      ? intent.shipAddress.city
                       : ""
                   }
                   validations={{
@@ -397,8 +369,8 @@ class OrderFormPage extends React.Component {
                   onChange={this.handleChange}
                   fullWidth={true}
                   value={
-                    order.shipAddress && order.shipAddress.country
-                      ? order.shipAddress.country
+                    intent.shipAddress && intent.shipAddress.country
+                      ? intent.shipAddress.country
                       : ""
                   }
                   validations={{
@@ -420,8 +392,8 @@ class OrderFormPage extends React.Component {
                   onChange={this.handleChange}
                   fullWidth={true}
                   value={
-                    order.shipAddress && order.shipAddress.zipcode
-                      ? order.shipAddress.zipcode
+                    intent.shipAddress && intent.shipAddress.zipcode
+                      ? intent.shipAddress.zipcode
                       : ""
                   }
                   validations={{
@@ -439,10 +411,10 @@ class OrderFormPage extends React.Component {
             <p style={styles.productList}>Product List: </p>
             <Divider />
 
-            {order.products && (
+            {intent.products && (
               <div>
                 <GridList cols={1} cellHeight={60}>
-                  {order.products.map((product, index) => (
+                  {intent.products.map((product, index) => (
                     <GridTile key={index}>
                       <div style={styles.productItem}>
                         <span>
@@ -468,7 +440,7 @@ class OrderFormPage extends React.Component {
             <Divider />
 
             <div style={styles.buttons}>
-              <Link to="/orders">
+              <Link to="/intents">
                 <RaisedButton label="Cancel" />
               </Link>
 
@@ -550,17 +522,17 @@ class OrderFormPage extends React.Component {
   }
 }
 
-OrderFormPage.propTypes = {
+IntentFormPage.propTypes = {
   router: PropTypes.object,
   routeParams: PropTypes.object,
-  order: PropTypes.object,
-  newOrder: PropTypes.func.isRequired,
-  getOrder: PropTypes.func.isRequired,
-  updateOrder: PropTypes.func.isRequired,
+  intent: PropTypes.object,
+  newIntent: PropTypes.func.isRequired,
+  getIntent: PropTypes.func.isRequired,
+  updateIntent: PropTypes.func.isRequired,
   getProductList: PropTypes.func.isRequired,
   updateSuccess: PropTypes.bool.isRequired,
   addSuccess: PropTypes.bool.isRequired,
-  addOrder: PropTypes.func.isRequired,
+  addIntent: PropTypes.func.isRequired,
   botList: PropTypes.array,
   categoryList: PropTypes.array,
   productList: PropTypes.array,
@@ -570,20 +542,20 @@ OrderFormPage.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { botReducer, orderReducer, productReducer } = state;
+  const { botReducer, intentReducer, productReducer } = state;
   const { productList, categoryList } = productReducer;
   const { botList } = botReducer;
   const {
-    order,
+    intent,
     isFetching,
     updateSuccess,
     addSuccess,
     isAuthenticated,
     user
-  } = orderReducer;
+  } = intentReducer;
 
   return {
-    order: order || {},
+    intent: intent || {},
     isFetching,
     botList,
     categoryList,
@@ -597,14 +569,14 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    newOrder: () => dispatch(newOrder()),
-    getOrder: id => dispatch(getOrder(id)),
-    updateOrder: order => dispatch(updateOrder(order)),
-    addOrder: order => dispatch(addOrder(order)),
+    newIntent: () => dispatch(newIntent()),
+    getIntent: id => dispatch(getIntent(id)),
+    updateIntent: intent => dispatch(updateIntent(intent)),
+    addIntent: intent => dispatch(addIntent(intent)),
     getCategoryList: () => dispatch(loadCategories()),
     getProductList: filters => dispatch(loadProducts(filters)),
     getAllBots: () => dispatch(loadBots())
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(OrderFormPage);
+export default connect(mapStateToProps, mapDispatchToProps)(IntentFormPage);

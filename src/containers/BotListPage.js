@@ -11,6 +11,7 @@ import {
 import FloatingActionButton from "material-ui/FloatingActionButton";
 import ContentCreate from "material-ui/svg-icons/content/create";
 import ActionDelete from "material-ui/svg-icons/action/delete";
+import ActionFace from "material-ui/svg-icons/action/face";
 import ContentAdd from "material-ui/svg-icons/content/add";
 import Search from "material-ui/svg-icons/action/search";
 import CheckCircle from "material-ui/svg-icons/action/check-circle";
@@ -20,6 +21,7 @@ import {
   grey200,
   grey500,
   green400,
+  orange400,
   white
 } from "material-ui/styles/colors";
 import PageBase from "../components/PageBase";
@@ -195,6 +197,9 @@ class BotListPage extends React.Component {
         backgroundColor: "lightblue"
       },
       editButton: {
+        paddingRight: 5
+      },
+      faceButton: {
         paddingRight: 25
       },
       editButtonIcon: {
@@ -205,13 +210,13 @@ class BotListPage extends React.Component {
       },
       columns: {
         name: {
-          width: "10%"
+          width: "30%"
         },
         description: {
-          width: "10%"
+          width: "30%"
         },
         nameTag: {
-          width: "5%"
+          width: "7%"
         },
         descriptionTag: {
           width: "10%"
@@ -308,6 +313,17 @@ class BotListPage extends React.Component {
             >
               {this.state.pageOfItems.map(item => (
                 <TableRow key={item.id}>
+                <Link className="button" to={"/intent/" + item.id}>
+                    <FloatingActionButton
+                      zDepth={0}
+                      mini={true}
+                      style={styles.faceButton}
+                      backgroundColor={orange400}
+                      iconStyle={styles.editButtonIcon}
+                    >
+                      <ActionFace/>
+                    </FloatingActionButton>
+                  </Link>
                   <TableRowColumn style={styles.columns.name}>
                     <img width={40} src={item.avatar} />
                   </TableRowColumn>

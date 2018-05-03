@@ -22,51 +22,53 @@ const BrowserUsage = props => {
   };
 
   return (
-    <Paper style={styles.paper}>
-      <span style={GlobalStyles.title}>Browser Usage</span>
+    <div>
+    </div>
+    // <Paper style={styles.paper}>
+    //   <span style={GlobalStyles.title}>Browser Usage</span>
 
-      <div style={GlobalStyles.clear} />
+    //   <div style={GlobalStyles.clear} />
 
-      <div className="row">
-        <div className="col-xs-12 col-sm-8 col-md-8 col-lg-8">
-          <div style={styles.pieChartDiv}>
-            <ResponsiveContainer>
-              <PieChart>
-                <Pie
-                  innerRadius={80}
-                  outerRadius={130}
-                  data={props.data}
-                  fill="#8884d8"
-                >
-                  {props.data.map(item => (
-                    <Cell key={item.name} fill={item.color} />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+    //   <div className="row">
+    //     <div className="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+    //       <div style={styles.pieChartDiv}>
+    //         <ResponsiveContainer>
+    //           <PieChart>
+    //             <Pie
+    //               innerRadius={80}
+    //               outerRadius={130}
+    //               data={props.data}
+    //               fill="#8884d8"
+    //             >
+    //               {props.data.map(item => (
+    //                 <Cell key={item.name} fill={item.color} />
+    //               ))}
+    //             </Pie>
+    //           </PieChart>
+    //         </ResponsiveContainer>
+    //       </div>
+    //     </div>
 
-        <div className="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-          <div style={styles.legend}>
-            <div style={styles.legend}>
-              <List>
-                {props.data.map(item => (
-                  <ListItem
-                    key={item.name}
-                    leftAvatar={
-                      <Avatar icon={item.icon} backgroundColor={item.color} />
-                    }
-                  >
-                    {item.name}
-                  </ListItem>
-                ))}
-              </List>
-            </div>
-          </div>
-        </div>
-      </div>
-    </Paper>
+    //     <div className="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+    //       <div style={styles.legend}>
+    //         <div style={styles.legend}>
+    //           <List>
+    //             {props.data.map(item => (
+    //               <ListItem
+    //                 key={item.name}
+    //                 leftAvatar={
+    //                   <Avatar icon={item.icon} backgroundColor={item.color} />
+    //                 }
+    //               >
+    //                 {item.name}
+    //               </ListItem>
+    //             ))}
+    //           </List>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div>
+    // </Paper>
   );
 };
 

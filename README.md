@@ -14,7 +14,7 @@ The goal of this starter project is to create reusable project for real-world bu
 * The UI part of this project uses Material-UI. 
 * This project uses Redux-Thunk to support back-end API.
 * To simulate real-world business, this starter project chooses Json-Server as fake Restful API. (You can simple replace it with your own API)
-* CRUD functions for Bot, Order, Product
+* CRUD functions for Bot, Intent, Product
 
 
 #### Screenshots
@@ -53,7 +53,7 @@ npm run start
 ##  Resources
 ##  http://localhost:5354/token
 ##  http://localhost:5354/bots
-##  http://localhost:5354/orders
+##  http://localhost:5354/intents
 ##  http://localhost:5354/products
 ##  http://localhost:5354/categories
 ##

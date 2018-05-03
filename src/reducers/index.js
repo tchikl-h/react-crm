@@ -2,14 +2,14 @@ import { combineReducers } from "redux";
 import { auth } from "./auth";
 import { botReducer } from "./bot";
 
-import { orderReducer } from "./order";
+import { intentReducer } from "./intent";
 
 import { productReducer } from "./product";
 
 const reducers = combineReducers({
   auth,
   botReducer,
-  orderReducer,
+  intentReducer,
   productReducer
 });
 

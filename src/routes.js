@@ -8,8 +8,8 @@ import AboutPage from "./containers/AboutPage";
 import BotListPage from "./containers/BotListPage";
 import BotFormPage from "./containers/BotFormPage";
 
-import OrderListPage from "./containers/OrderListPage";
-import OrderFormPage from "./containers/OrderFormPage";
+import IntentListPage from "./containers/IntentListPage";
+import IntentFormPage from "./containers/IntentFormPage";
 import ProductFormPage from "./containers/ProductFormPage";
 import ProductListPage from "./containers/ProductListPage";
 
@@ -21,12 +21,12 @@ export default (
       <Route path="form" component={FormPage} />
       <Route path="bot" component={BotFormPage} />
       <Route path="bot/:id" component={BotFormPage} />
-      <Route path="order" component={OrderFormPage} />
-      <Route path="order/:id" component={OrderFormPage} />
+      <Route path="intent" component={IntentFormPage} />
+      <Route path="intent/:id" component={IntentFormPage} />
       <Route path="product" component={ProductFormPage} />
       <Route path="product/:id" component={ProductFormPage} />
       <Route path="bots" component={BotListPage} />
-      <Route path="orders" component={OrderListPage} />
+      <Route path="intents" component={IntentListPage} />
       <Route path="products" component={ProductListPage} />
       <Route path="about" component={AboutPage} />
       <Route path="*" component={NotFoundPage} />

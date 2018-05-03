@@ -24,7 +24,7 @@ import PageBase from "../components/PageBase";
 // import Data from '../data';
 import Pagination from "../components/Pagination";
 import { connect } from "react-redux";
-import { loadOrders, deleteOrder } from "../actions/order";
+import { loadIntents, deleteIntent } from "../actions/intent";
 import Dialog from "material-ui/Dialog";
 import FlatButton from "material-ui/FlatButton";
 import Drawer from "material-ui/Drawer";
@@ -32,7 +32,7 @@ import RaisedButton from "material-ui/RaisedButton";
 import TextField from "material-ui/TextField";
 import Snackbar from "material-ui/Snackbar";
 
-class OrderListPage extends React.Component {
+class IntentListPage extends React.Component {
   constructor(props) {
     super(props);
 
@@ -51,7 +51,7 @@ class OrderListPage extends React.Component {
       deselectOnClickaway: true,
       showCheckboxes: false,
       pageOfItems: [],
-      orderId: null,
+      intentId: null,
       dialogText: "Are you sure to do this?",
       search: {
         product: ""
@@ -67,8 +67,8 @@ class OrderListPage extends React.Component {
     this.handleErrorMessage = this.handleErrorMessage.bind(this);
     this.handleSnackBarClose = this.handleSnackBarClose.bind(this);
 
-    if (this.props.orderList || this.props.orderList.length < 1)
-      props.getAllOrders(this.state.search);
+    if (this.props.intentList || this.props.intentList.length < 1)
+      props.getAllIntents(this.state.search);
   }
 
   componentWillMount() {}
@@ -76,9 +76,9 @@ class OrderListPage extends React.Component {
   /* eslint-disable */
   componentDidUpdate(prevProps, prevState) {
     // reset page if items array has changed
-    if (this.props.orderList !== prevProps.orderList) {
+    if (this.props.intentList !== prevProps.intentList) {
       //this.setPage(this.props.initialPage);
-      this.onChangePage(this.props.orderList.slice(0, 5));
+      this.onChangePage(this.props.intentList.slice(0, 5));
     }
   }
 
@@ -93,7 +93,7 @@ class OrderListPage extends React.Component {
       !nextProps.errorMessage &&
       !nextProps.isFetching
     ) {
-      this.props.getAllOrders();
+      this.props.getAllIntents();
     }
   }
 
@@ -101,7 +101,7 @@ class OrderListPage extends React.Component {
     if (
       !this.props.isFetching &&
       this.state.pageOfItems &&
-      this.props.orderList
+      this.props.intentList
     )
       this.setState({ pageOfItems: pageOfItems });
   }
@@ -118,27 +118,27 @@ class OrderListPage extends React.Component {
 
   handleSearch() {
     this.setState({ searchOpen: !this.state.searchOpen });
-    this.props.getAllOrders(this.state.search);
+    this.props.getAllIntents(this.state.search);
   }
 
   handleOpen(id) {
     this.setState({ dialogText: "Are you sure to delete this data?" });
     this.setState({ open: true });
-    this.setState({ orderId: id });
+    this.setState({ intentId: id });
   }
 
   handleClose(isConfirmed) {
     this.setState({ open: false });
 
-    if (isConfirmed && this.state.orderId) {
-      this.props.deleteOrder(this.state.orderId);
-      this.setState({ orderId: null });
+    if (isConfirmed && this.state.intentId) {
+      this.props.deleteIntent(this.state.intentId);
+      this.setState({ intentId: null });
     }
   }
 
   handleSearch() {
     this.setState({ searchOpen: !this.state.searchOpen });
-    this.props.getAllOrders(this.state.search);
+    this.props.getAllIntents(this.state.search);
   }
 
   handleSearchFilter(event) {
@@ -165,7 +165,7 @@ class OrderListPage extends React.Component {
   }
 
   render() {
-    const { errorMessage, orderList } = this.props;
+    const { errorMessage, intentList } = this.props;
 
     const styles = {
       fab: {
@@ -237,14 +237,14 @@ class OrderListPage extends React.Component {
         onTouchTap={() => this.handleClose(true)}
       />
     ];
-
+    console.log("==>"+intentList[0].bot);
     return (
       <PageBase
-        title={"Orders (" + orderList.length + ")"}
-        navigation="Reetek React CRM / Order"
+        title={"Intents (" + intentList.length + ")"}
+        navigation="Reetek React CRM / Intent"
       >
         <div>
-          <Link to="/order">
+          <Link to="/intent">
             <FloatingActionButton style={styles.fab} backgroundColor={pink500}>
               <ContentAdd />
             </FloatingActionButton>
@@ -287,7 +287,7 @@ class OrderListPage extends React.Component {
                   Amount
                 </TableHeaderColumn>
                 <TableHeaderColumn style={styles.columns.price}>
-                  Order Date
+                  Intent Date
                 </TableHeaderColumn>
                 <TableHeaderColumn style={styles.columns.price}>
                   Shipped Date
@@ -313,25 +313,23 @@ class OrderListPage extends React.Component {
                     {item.reference}
                   </TableRowColumn>
                   <TableRowColumn style={styles.columns.price}>
-                    {item.products.length}
+                    {`null`}
                   </TableRowColumn>
                   <TableRowColumn style={styles.columns.price}>
                     AUD ${item.amount}
                   </TableRowColumn>
                   <TableRowColumn style={styles.columns.price}>
-                    {item.orderDate}
+                    {item.intentDate}
                   </TableRowColumn>
                   <TableRowColumn style={styles.columns.price}>
                     {item.shippedDate}
                   </TableRowColumn>
                   {/*<TableRowColumn style={styles.columns.price}>{item.quantity * item.price}</TableRowColumn>*/}
                   <TableRowColumn style={styles.columns.category}>
-                    {item.bot
-                      ? item.bot.name
-                      : ""}
+                    {item.bot}
                   </TableRowColumn>
                   <TableRowColumn style={styles.columns.edit}>
-                    <Link className="button" to={"/order/" + item.id}>
+                    <Link className="button" to={"/intent/" + item.id}>
                       <FloatingActionButton
                         zDepth={0}
                         mini={true}
@@ -360,9 +358,9 @@ class OrderListPage extends React.Component {
           <div className={"row center-xs"}>
             <div className={"col-xs-6"}>
               <div className={"box"}>
-                {orderList && (
+                {intentList && (
                   <Pagination
-                    items={orderList}
+                    items={intentList}
                     onChangePage={this.onChangePage}
                   />
                 )}
@@ -409,27 +407,27 @@ class OrderListPage extends React.Component {
   }
 }
 
-OrderListPage.propTypes = {
-  orderList: PropTypes.array,
-  getAllOrders: PropTypes.func.isRequired,
-  deleteOrder: PropTypes.func.isRequired,
+IntentListPage.propTypes = {
+  intentList: PropTypes.array,
+  getAllIntents: PropTypes.func.isRequired,
+  deleteIntent: PropTypes.func.isRequired,
   deleteSuccess: PropTypes.bool.isRequired,
   errorMessage: PropTypes.string
 };
 
 function mapStateToProps(state) {
-  const { orderReducer } = state;
+  const { intentReducer } = state;
   const {
-    orderList,
+    intentList,
     deleteSuccess,
     isFetching,
     isAuthenticated,
     errorMessage,
     user
-  } = orderReducer;
+  } = intentReducer;
 
   return {
-    orderList,
+    intentList,
     isFetching,
     isAuthenticated,
     errorMessage,
@@ -440,9 +438,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    getAllOrders: filters => dispatch(loadOrders(filters)),
-    deleteOrder: id => dispatch(deleteOrder(id))
+    getAllIntents: filters => dispatch(loadIntents(filters)),
+    deleteIntent: id => dispatch(deleteIntent(id))
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(OrderListPage);
+export default connect(mapStateToProps, mapDispatchToProps)(IntentListPage);

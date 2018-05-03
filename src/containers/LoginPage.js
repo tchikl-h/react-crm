@@ -123,7 +123,7 @@ class LoginPage extends React.Component {
         },
         iconStyle: {
           color: grey500,
-          borderColor: grey500,
+          bintentColor: grey500,
           fill: grey500
         }
       },
@@ -134,7 +134,7 @@ class LoginPage extends React.Component {
         background: "#4f81e9",
         color: white,
         padding: 7,
-        borderRadius: 2,
+        bintentRadius: 2,
         margin: 2,
         fontSize: 13
       },

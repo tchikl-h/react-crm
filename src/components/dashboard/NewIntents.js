@@ -4,7 +4,7 @@ import { white, purple600, purple500 } from "material-ui/styles/colors";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
 import { typography } from "material-ui/styles";
 
-const NewOrders = props => {
+const NewIntents = props => {
   const styles = {
     paper: {
       backgroundColor: purple500,
@@ -24,26 +24,28 @@ const NewOrders = props => {
   };
 
   return (
-    <Paper style={styles.paper}>
-      <div style={{ ...styles.header }}>New Orders</div>
-      <div style={styles.div}>
-        <ResponsiveContainer>
-          <LineChart data={props.data}>
-            <Line
-              type="monotone"
-              dataKey="pv"
-              stroke="#8884d8"
-              strokeWidth={2}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-    </Paper>
+    <div>
+    </div>
+    // <Paper style={styles.paper}>
+    //   <div style={{ ...styles.header }}>New Intents</div>
+    //   <div style={styles.div}>
+    //     <ResponsiveContainer>
+    //       <LineChart data={props.data}>
+    //         <Line
+    //           type="monotone"
+    //           dataKey="pv"
+    //           stroke="#8884d8"
+    //           strokeWidth={2}
+    //         />
+    //       </LineChart>
+    //     </ResponsiveContainer>
+    //   </div>
+    // </Paper>
   );
 };
 
-NewOrders.propTypes = {
+NewIntents.propTypes = {
   data: PropTypes.array
 };
 
-export default NewOrders;
+export default NewIntents;

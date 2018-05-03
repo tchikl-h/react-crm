@@ -24,19 +24,21 @@ const MonthlySales = props => {
   };
 
   return (
-    <Paper style={styles.paper}>
-      <div style={{ ...GlobalStyles.title, ...styles.header }}>
-        Monthly Sales
-      </div>
-      <div style={styles.div}>
-        <ResponsiveContainer>
-          <BarChart data={props.data}>
-            <Bar dataKey="uv" fill={pink500} />
-            <XAxis dataKey="name" stroke="none" tick={{ fill: white }} />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-    </Paper>
+    <div>
+    </div>
+    // <Paper style={styles.paper}>
+    //   <div style={{ ...GlobalStyles.title, ...styles.header }}>
+    //     Monthly Sales
+    //   </div>
+    //   <div style={styles.div}>
+    //     <ResponsiveContainer>
+    //       <BarChart data={props.data}>
+    //         <Bar dataKey="uv" fill={pink500} />
+    //         <XAxis dataKey="name" stroke="none" tick={{ fill: white }} />
+    //       </BarChart>
+    //     </ResponsiveContainer>
+    //   </div>
+    // </Paper>
   );
 };
 

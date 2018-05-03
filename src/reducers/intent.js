@@ -1,27 +1,27 @@
 import {
-  LOAD_ORDERS_REQUEST,
-  LOAD_ORDERS_SUCCESS,
-  LOAD_ORDERS_FAILURE,
-  GET_ORDER_REQUEST,
-  GET_ORDER_SUCCESS,
-  GET_ORDER_FAILURE,
-  UPDATE_ORDER_REQUEST,
-  UPDATE_ORDER_SUCCESS,
-  UPDATE_ORDER_FAILURE,
-  ADD_ORDER_REQUEST,
-  ADD_ORDER_SUCCESS,
-  ADD_ORDER_FAILURE,
-  DELETE_ORDER_REQUEST,
-  DELETE_ORDER_SUCCESS,
-  DELETE_ORDER_FAILURE,
-  NEW_ORDER_REQUEST
+  LOAD_INTENTS_REQUEST,
+  LOAD_INTENTS_SUCCESS,
+  LOAD_INTENTS_FAILURE,
+  GET_INTENT_REQUEST,
+  GET_INTENT_SUCCESS,
+  GET_INTENT_FAILURE,
+  UPDATE_INTENT_REQUEST,
+  UPDATE_INTENT_SUCCESS,
+  UPDATE_INTENT_FAILURE,
+  ADD_INTENT_REQUEST,
+  ADD_INTENT_SUCCESS,
+  ADD_INTENT_FAILURE,
+  DELETE_INTENT_REQUEST,
+  DELETE_INTENT_SUCCESS,
+  DELETE_INTENT_FAILURE,
+  NEW_INTENT_REQUEST
 } from "../constants";
 
-export function orderReducer(
+export function intentReducer(
   state = {
     isFetching: false,
-    // order: {},
-    orderList: [],
+    // intent: {},
+    intentList: [],
     isAuthenticated: localStorage.getItem("token") ? true : false,
     user: localStorage.getItem("user")
       ? JSON.parse(localStorage.getItem("user"))
@@ -33,16 +33,17 @@ export function orderReducer(
   },
   action
 ) {
+  console.log(action.type);
   switch (action.type) {
-    case LOAD_ORDERS_REQUEST:
+    case LOAD_INTENTS_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
         filters: action.filters
       });
-    case LOAD_ORDERS_SUCCESS:
+    case LOAD_INTENTS_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
-        orderList: JSON.parse(action.response).filter(e => {
+        intentList: JSON.parse(action.response).filter(e => {
           if (action.filters) {
             if (action.filters.product)
               return e.product.indexOf(action.filters.product) > -1;
@@ -55,82 +56,85 @@ export function orderReducer(
         deleteSuccess: false,
         errorMessage: null
       });
-    case LOAD_ORDERS_FAILURE:
+    case LOAD_INTENTS_FAILURE:
       return Object.assign({}, state, {
         isFetching: false,
         errorMessage: action.message
       });
 
-    case GET_ORDER_REQUEST:
+    case GET_INTENT_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
         authenticated: action.authenticated || false
       });
-    case GET_ORDER_SUCCESS:
+    case GET_INTENT_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
-        order: JSON.parse(action.response),
+        intent: JSON.parse(action.response),
         authenticated: action.authenticated || false
       });
-    case GET_ORDER_FAILURE:
+    case GET_INTENT_FAILURE:
       return Object.assign({}, state, {
         isFetching: false,
         errorMessage: action.message
       });
 
-    case UPDATE_ORDER_REQUEST:
+    case UPDATE_INTENT_REQUEST:
       return Object.assign({}, state, {
         isFetching: true
       });
-    case UPDATE_ORDER_SUCCESS:
+    case UPDATE_INTENT_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
-        // order:{},
-        // order: order,
+        // intent:{},
+        // intent: intent,
         updateSuccess: true,
         authenticated: action.authenticated || false
       });
-    case UPDATE_ORDER_FAILURE:
+    case UPDATE_INTENT_FAILURE:
       return Object.assign({}, state, {
         isFetching: false,
-        order: {},
+        intent: {},
         errorMessage: action.error.statusText || action.error.status,
         updateSuccess: false
       });
-    case NEW_ORDER_REQUEST:
+    case NEW_INTENT_REQUEST:
       return Object.assign({}, state, {
         isFetching: false,
-        order: {}
+        intent: {}
       });
-    case ADD_ORDER_REQUEST:
+    case ADD_INTENT_REQUEST:
+      console.log("ADD Object");
       return Object.assign({}, state, {
         isFetching: true
       });
-    case ADD_ORDER_SUCCESS:
+    case ADD_INTENT_SUCCESS:
+      console.log("SUCCESS Object");
       return Object.assign({}, state, {
         isFetching: false,
         addSuccess: true,
         authenticated: action.authenticated || false
       });
-    case ADD_ORDER_FAILURE:
+    case ADD_INTENT_FAILURE:
+      console.log("FAILURE Object");
       return Object.assign({}, state, {
         isFetching: false,
         errorMessage: action.error.statusText || action.error.status,
         addSuccess: false
       });
-    case DELETE_ORDER_REQUEST:
+    case DELETE_INTENT_REQUEST:
       return Object.assign({}, state, {
         isFetching: true
       });
-    case DELETE_ORDER_SUCCESS:
+    case DELETE_INTENT_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
-        // order: order,
+        // intent: intent,
         deleteSuccess: true,
         action: action,
         authenticated: action.authenticated || false
       });
-    case DELETE_ORDER_FAILURE:
+    case DELETE_INTENT_FAILURE:
       return Object.assign({}, state, {
         isFetching: false,
         deleteSuccess: false,

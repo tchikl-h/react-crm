@@ -10,7 +10,7 @@ import Face from "material-ui/svg-icons/action/face";
 import ThumbUp from "material-ui/svg-icons/action/thumb-up";
 import ShoppingCart from "material-ui/svg-icons/action/shopping-cart";
 import InfoBox from "../components/dashboard/InfoBox";
-import NewOrders from "../components/dashboard/NewOrders";
+import NewIntents from "../components/dashboard/NewIntents";
 import MonthlySales from "../components/dashboard/MonthlySales";
 import BrowserUsage from "../components/dashboard/BrowserUsage";
 // import RecentlyProducts from '../components/dashboard/RecentlyProducts';
@@ -106,7 +106,7 @@ const DashboardPage = () => {
   
         <div className="row">
           <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-md m-b-15">
-            <NewOrders data={Data.dashBoardPage.newOrders} />
+            <NewIntents data={Data.dashBoardPage.newIntents} />
           </div>
   
           <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 m-b-15">
