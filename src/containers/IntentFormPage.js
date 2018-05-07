@@ -7,7 +7,7 @@ import RaisedButton from "material-ui/RaisedButton";
 // import Toggle from 'material-ui/Toggle';
 // import DatePicker from 'material-ui/DatePicker';
 import Dialog from "material-ui/Dialog"; // , { DialogActions, DialogContent, DialogContentText, DialogTitle}
-import { grey400 } from "material-ui/styles/colors";
+import { grey400, grey200, grey500 } from "material-ui/styles/colors";
 import Divider from "material-ui/Divider";
 import PageBase from "../components/PageBase";
 import IconButton from "material-ui/IconButton";
@@ -24,6 +24,7 @@ import Formsy from "formsy-react";
 import MenuItem from "material-ui/MenuItem";
 import CircularProgress from "material-ui/CircularProgress";
 import autoBind from "react-autobind";
+import FloatingActionButton from "material-ui/FloatingActionButton";
 let botName;
 class IntentFormPage extends React.Component {
   constructor(props) {
@@ -35,7 +36,9 @@ class IntentFormPage extends React.Component {
       responseTypeValue: "",
       product: null,
       open: false,
-      intent: {}
+      intent: {},
+      name: '',
+      shareholders: [{ name: '' }],
     };
 
     // autobind(this);
@@ -99,13 +102,19 @@ class IntentFormPage extends React.Component {
   handleClick(event, action) {
     event.preventDefault();
     console.log(event);
-    this.state.intent["response"] = {};
-    this.state.intent["response"]["text"] = this.state.intent["text"];
-    this.state.intent["response"]["imageUrl"] = this.state.intent["imageUrl"];
-    this.state.intent["response"]["cardTitle"] = this.state.intent["cardTitle"];
-    this.state.intent["response"]["cardSubtitle"] = this.state.intent["cardSubtitle"];
-    this.state.intent["response"]["buttonTitle"] = this.state.intent["buttonTitle"];
-    this.state.intent["response"]["responseType"] = this.state.responseTypeValue;
+    this.state.intent.response = {};
+    this.state.intent.response.text = this.state.intent.text;
+    this.state.intent.response.imageUrl = this.state.intent.imageUrl;
+    this.state.intent.response.cardTitle = this.state.intent.cardTitle;
+    this.state.intent.response.cardSubtitle = this.state.intent.cardSubtitle;
+    this.state.intent.response.buttonTitle = this.state.intent.buttonTitle;
+    this.state.intent.response.responseType = this.state.responseTypeValue;
+    this.state.intent.response.title = this.state.intent.title;
+    if (this.state.shareholders[0].name !== "") {
+      this.state.shareholders.map((shareholder, idx) => (
+        this.state.intent.response[`response${idx + 1}`] = shareholder.name
+      )); 
+    }
     
     delete this.state.intent.text;
     delete this.state.intent.Response;
@@ -114,6 +123,7 @@ class IntentFormPage extends React.Component {
     delete this.state.intent.cardSubtitle;
     delete this.state.intent.buttonTitle;
     delete this.state.intent.responseType;
+    delete this.state.intent.title;
     if (action && action === "AddProduct") {
       this.setState({ open: true });
     } else {
@@ -192,6 +202,32 @@ class IntentFormPage extends React.Component {
     this.setState({ product: this.props.productList[values] });
   }
 
+  handleShareholderNameChange = (idx) => (evt) => {
+    const newShareholders = this.state.shareholders.map((shareholder, sidx) => {
+      if (idx !== sidx) return shareholder;
+      return { ...shareholder, name: evt.target.value };
+    });
+
+    this.setState({ shareholders: newShareholders });
+  }
+
+  handleSubmit = (evt) => {
+    const { name, shareholders } = this.state;
+    alert(`Incorporated: ${name} with ${shareholders.length} shareholders`);
+  }
+
+  handleAddShareholder = () => {
+    this.setState({
+      shareholders: this.state.shareholders.concat([{ name: '' }])
+    });
+  }
+
+  handleRemoveShareholder = (idx) => () => {
+    this.setState({
+      shareholders: this.state.shareholders.filter((s, sidx) => idx !== sidx)
+    });
+  }
+
   render() {
     const {
       errorMessage,
@@ -211,6 +247,9 @@ class IntentFormPage extends React.Component {
       toggleLabel: {
         color: grey400,
         fontWeight: 100
+      },
+      deleteButton: {
+        fill: grey500
       },
       buttons: {
         marginTop: 30,
@@ -357,7 +396,6 @@ class IntentFormPage extends React.Component {
                       name="cardTitle"
                       onChange={this.handleChange}
                       fullWidth={true}
-                      disabled={this.state.responseTypeValue !== "Card"}
                       value={intent.cardTitle ? intent.cardTitle : ""}
                       validations={{
                         isWords: true
@@ -376,7 +414,6 @@ class IntentFormPage extends React.Component {
                       name="cardSubtitle"
                       onChange={this.handleChange}
                       fullWidth={true}
-                      disabled={this.state.responseTypeValue !== "Card"}
                       value={intent.cardSubtitle ? intent.cardSubtitle : ""}
                       validationErrors={{
                         isWords: "Please provide valid card subtitle name",
@@ -391,7 +428,6 @@ class IntentFormPage extends React.Component {
                       name="buttonTitle"
                       onChange={this.handleChange}
                       fullWidth={true}
-                      disabled={this.state.responseTypeValue !== "Card"}
                       value={intent.buttonTitle ? intent.buttonTitle : ""}
                       validations={{
                         isWords: true
@@ -416,9 +452,48 @@ class IntentFormPage extends React.Component {
                         isWords: "Please provide valid image url name",
                         isDefaultRequiredValue: "This is a required field"
                       }}
+                      required
                     />
                   </GridTile>}
-            <div style={styles.buttons}>
+                  {this.state.responseTypeValue === "Quick replies" && <FormsyText
+                      hintText="Enter title"
+                      floatingLabelText="Enter title"
+                      name="title"
+                      onChange={this.handleChange}
+                      fullWidth={true}
+                      value={intent.title ? intent.title : ""}
+                      validationErrors={{
+                        isWords: "Please provide valid title name",
+                        isDefaultRequiredValue: "This is a required field"
+                      }}
+                      required
+                    />}
+              {this.state.responseTypeValue === "Quick replies" && this.state.shareholders.map((shareholder, idx) => (
+                <GridTile>
+                    <FormsyText
+                      hintText="Enter new response"
+                      floatingLabelText="Enter new response"
+                      name={`response${idx + 1}`}
+                      onChange={this.handleShareholderNameChange(idx)}
+                      fullWidth={true}
+                      value={shareholder.name ? shareholder.name : ""}
+                    />
+                    <FloatingActionButton
+                      zDepth={0}
+                      mini={true}
+                      backgroundColor={grey200}
+                      iconStyle={styles.deleteButton}
+                      onClick={this.handleRemoveShareholder(idx)}>
+                      <ActionDelete />
+                    </FloatingActionButton>
+              </GridTile>))}
+                {this.state.responseTypeValue === "Quick replies" && <RaisedButton
+                label="Add response"
+                type="button"
+                onClick={this.handleAddShareholder}
+                primary={true}
+              />}
+              <div style={styles.buttons}>
               <Link to="/intents">
                 <RaisedButton label="Cancel" />
               </Link>
