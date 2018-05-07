@@ -51,17 +51,49 @@
   ],
   "intents": [
     {
-      "response": "Bonjour ",
       "bot": "Alfred",
-      "intentName": "HELLO",
+      "intentName": "Welcome",
       "id": 1,
-      "reference": "fre"
+      "response": {
+        "responseType": "Card"
+      }
     },
     {
-      "intentName": "FALLBACK",
+      "intentName": "Goodbye",
       "bot": "luis",
-      "response": "J'ai pas compris",
+      "response": "A la prochaine !",
       "id": 2
+    },
+    {
+      "response": {
+        "text": "hello",
+        "imageUrl": "a",
+        "cardTitle": "b",
+        "cardSubtitle": "c",
+        "buttonTitle": "d"
+      },
+      "id": 3
+    },
+    {
+      "bot": "Alfred",
+      "response": {
+        "text": "azd",
+        "imageUrl": "a",
+        "cardTitle": "b",
+        "cardSubtitle": "c",
+        "buttonTitle": "d"
+      },
+      "id": 4
+    },
+    {
+      "intentName": "Help",
+      "response": {
+        "imageUrl": "a",
+        "cardTitle": "b",
+        "cardSubtitle": "c",
+        "buttonTitle": "d"
+      },
+      "id": 5
     }
   ],
   "products": [

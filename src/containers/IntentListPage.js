@@ -246,7 +246,6 @@ class IntentListPage extends React.Component {
         onTouchTap={() => this.handleClose(true)}
       />
     ];
-    console.log("==>"+intentList[0].bot);
     return (
       <PageBase
         title={"Intents (" + intentList.length + ")"}
@@ -313,7 +312,7 @@ class IntentListPage extends React.Component {
                     {item.intentName}
                   </TableRowColumn>
                   <TableRowColumn style={styles.columns.response}>
-                    {item.response}
+                    {item.response.text}
                   </TableRowColumn>
                   <TableRowColumn style={styles.columns.edit}>
                     <Link className="button" to={"/intent/" + item.id}>

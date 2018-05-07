@@ -32,6 +32,7 @@ class IntentFormPage extends React.Component {
     this.state = {
       isFetching: this.props.routeParams.id ? true : false,
       categoryId: 0,
+      responseTypeValue: "",
       product: null,
       open: false,
       intent: {}
@@ -98,6 +99,21 @@ class IntentFormPage extends React.Component {
   handleClick(event, action) {
     event.preventDefault();
     console.log(event);
+    this.state.intent["response"] = {};
+    this.state.intent["response"]["text"] = this.state.intent["text"];
+    this.state.intent["response"]["imageUrl"] = this.state.intent["imageUrl"];
+    this.state.intent["response"]["cardTitle"] = this.state.intent["cardTitle"];
+    this.state.intent["response"]["cardSubtitle"] = this.state.intent["cardSubtitle"];
+    this.state.intent["response"]["buttonTitle"] = this.state.intent["buttonTitle"];
+    this.state.intent["response"]["responseType"] = this.state.responseTypeValue;
+    
+    delete this.state.intent.text;
+    delete this.state.intent.Response;
+    delete this.state.intent.imageUrl;
+    delete this.state.intent.cardTitle;
+    delete this.state.intent.cardSubtitle;
+    delete this.state.intent.buttonTitle;
+    delete this.state.intent.responseType;
     if (action && action === "AddProduct") {
       this.setState({ open: true });
     } else {
@@ -168,6 +184,10 @@ class IntentFormPage extends React.Component {
     });
   }
 
+  handleResponseChange(event, index, values) {
+    this.setState({ responseTypeValue: index });
+  }
+
   handleProductChange(event, index, values) {
     this.setState({ product: this.props.productList[values] });
   }
@@ -232,7 +252,10 @@ class IntentFormPage extends React.Component {
     if (isFetching) {
       return <CircularProgress />;
     } else {
-      botName = botList[window.location.href.split("/")[4] - 1].name;
+      if (botList && botList[window.location.href.split("/")[4] - 1])
+        botName = botList[window.location.href.split("/")[4] - 1].name;
+      let responseType = [{"text":"Text response", "id":0}, {"text":"Image", "id":1}, {"text":"Card", "id":2}, {"text":"Quick replies", "id":3}];
+      
       return (
         <PageBase title={botName+" - Intent"} navigation="Application / Intent ">
           <Formsy.Form
@@ -241,7 +264,6 @@ class IntentFormPage extends React.Component {
             onValidSubmit={this.handleClick}
             onInvalidSubmit={this.notifyFormError}
           >
-            <GridList cols={3} cellHeight={60}>
             <GridTile>
                 <FormsyText
                   hintText="Intent's name"
@@ -261,25 +283,141 @@ class IntentFormPage extends React.Component {
                 />
               </GridTile>
               <GridTile>
-                <FormsyText
-                  hintText="Response"
-                  floatingLabelText="Response"
-                  name="response"
-                  onChange={this.handleChange}
+                <FormsySelect
+                  hintText="Response type"
+                  floatingLabelText="Response type"
+                  name="responseTypeValue"
+                  onChange={this.handleResponseChange}
                   fullWidth={true}
-                  value={intent.response ? intent.response : ""}
+                  value={intent.responseType ? intent.responseType : ""}
+                  style={styles.customWidth}
                   validations={{
                     isWords: true
                   }}
                   validationErrors={{
-                    isWords: "Please provide valid response name",
-                    isDefaultRequiredValue: "This is a required field"
+                    isWords: "Please provide valid response type name"
                   }}
-                  required
-                />
+                >
+                  {
+                    responseType.map((responsetype, index) => (
+                    <MenuItem
+                      key={index}
+                      value={responsetype.text}
+                      style={styles.menuItem}
+                      primaryText={
+                        responsetype.text
+                      }
+                    />
+                  ))}
+                </FormsySelect>
               </GridTile>
-            </GridList>
-
+              {this.state.responseTypeValue === "Text response" && <GridTile>
+                <FormsyText
+                    hintText="Text"
+                    floatingLabelText="Text"
+                    name="text"
+                    onChange={this.handleChange}
+                    fullWidth={true}
+                    value={intent.text ? intent.text : ""}
+                    validations={{
+                      isWords: true
+                    }}
+                    validationErrors={{
+                      isWords: "Please provide valid text name",
+                      isDefaultRequiredValue: "This is a required field"
+                    }}
+                    required
+                  />
+              </GridTile>}
+              {this.state.responseTypeValue === "Card" && <PageBase title="Card">
+                <Formsy.Form
+                  onValid={this.enableButton}
+                  onInvalid={this.disableButton}
+                  onValidSubmit={this.handleClick}
+                  onInvalidSubmit={this.notifyFormError}
+                >
+                  <GridTile>
+                    <FormsyText
+                      hintText="Enter image URL"
+                      floatingLabelText="Enter image URL"
+                      name="imageUrl"
+                      onChange={this.handleChange}
+                      fullWidth={true}
+                      value={intent.imageUrl ? intent.imageUrl : ""}
+                      validationErrors={{
+                        isWords: "Please provide valid image url name",
+                        isDefaultRequiredValue: "This is a required field"
+                      }}
+                    />
+                  </GridTile>
+                  <GridTile>
+                    <FormsyText
+                      hintText="Enter card title"
+                      floatingLabelText="Enter card title"
+                      name="cardTitle"
+                      onChange={this.handleChange}
+                      fullWidth={true}
+                      disabled={this.state.responseTypeValue !== "Card"}
+                      value={intent.cardTitle ? intent.cardTitle : ""}
+                      validations={{
+                        isWords: true
+                      }}
+                      validationErrors={{
+                        isWords: "Please provide valid card title name",
+                        isDefaultRequiredValue: "This is a required field"
+                      }}
+                      required
+                    />
+                  </GridTile>
+                  <GridTile>
+                    <FormsyText
+                      hintText="Enter card subtitle"
+                      floatingLabelText="Enter card subtitle"
+                      name="cardSubtitle"
+                      onChange={this.handleChange}
+                      fullWidth={true}
+                      disabled={this.state.responseTypeValue !== "Card"}
+                      value={intent.cardSubtitle ? intent.cardSubtitle : ""}
+                      validationErrors={{
+                        isWords: "Please provide valid card subtitle name",
+                        isDefaultRequiredValue: "This is a required field"
+                      }}
+                    />
+                  </GridTile>
+                  <GridTile>
+                    <FormsyText
+                      hintText="Enter button title"
+                      floatingLabelText="Enter button title"
+                      name="buttonTitle"
+                      onChange={this.handleChange}
+                      fullWidth={true}
+                      disabled={this.state.responseTypeValue !== "Card"}
+                      value={intent.buttonTitle ? intent.buttonTitle : ""}
+                      validations={{
+                        isWords: true
+                      }}
+                      validationErrors={{
+                        isWords: "Please provide valid button title name",
+                        isDefaultRequiredValue: "This is a required field"
+                      }}
+                    />
+                  </GridTile>
+                </Formsy.Form>
+              </PageBase>}
+              {this.state.responseTypeValue === "Image" && <GridTile>
+                    <FormsyText
+                      hintText="Enter image URL"
+                      floatingLabelText="Enter image URL"
+                      name="imageUrl"
+                      onChange={this.handleChange}
+                      fullWidth={true}
+                      value={intent.imageUrl ? intent.imageUrl : ""}
+                      validationErrors={{
+                        isWords: "Please provide valid image url name",
+                        isDefaultRequiredValue: "This is a required field"
+                      }}
+                    />
+                  </GridTile>}
             <div style={styles.buttons}>
               <Link to="/intents">
                 <RaisedButton label="Cancel" />
