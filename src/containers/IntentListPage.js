@@ -25,6 +25,7 @@ import PageBase from "../components/PageBase";
 import Pagination from "../components/Pagination";
 import { connect } from "react-redux";
 import { loadIntents, deleteIntent } from "../actions/intent";
+import { loadBots } from "../actions/bot";
 import Dialog from "material-ui/Dialog";
 import FlatButton from "material-ui/FlatButton";
 import Drawer from "material-ui/Drawer";
@@ -55,6 +56,9 @@ class IntentListPage extends React.Component {
       dialogText: "Are you sure to do this?",
       search: {
         product: ""
+      },
+      searchBot: {
+        name: ""
       }
     };
 
@@ -69,9 +73,13 @@ class IntentListPage extends React.Component {
 
     if (this.props.intentList || this.props.intentList.length < 1)
       props.getAllIntents(this.state.search);
+    if (this.props.botList || this.props.botList.length < 1)
+      props.getAllIntents(this.state.search);
   }
 
-  componentWillMount() {}
+  componentWillMount() {
+    this.props.getAllBots();
+  }
 
   /* eslint-disable */
   componentDidUpdate(prevProps, prevState) {
@@ -165,7 +173,7 @@ class IntentListPage extends React.Component {
   }
 
   render() {
-    const { errorMessage, intentList } = this.props;
+    const { errorMessage, intentList, botList } = this.props;
 
     const styles = {
       fab: {
@@ -248,11 +256,11 @@ class IntentListPage extends React.Component {
     ];
     return (
       <PageBase
-        title={"Intents (" + intentList.length + ")"}
+        title={"Intents (" + intentList.filter(item => item.bot === botList[this.props.routeParams.id - 1].name).length + ")"}
         navigation="Reetek React CRM / Intent"
       >
         <div>
-          <Link to="/intent">
+          <Link to={"/bot/"+this.props.routeParams.id+"/intent"}>
             <FloatingActionButton style={styles.fab} backgroundColor={pink500}>
               <ContentAdd />
             </FloatingActionButton>
@@ -303,7 +311,7 @@ class IntentListPage extends React.Component {
               showRowHover={this.state.showRowHover}
               stripedRows={this.state.stripedRows}
             >
-              {this.state.pageOfItems.map(item => (
+              {this.state.pageOfItems.filter(item => item.bot === botList[this.props.routeParams.id - 1].name).map(item => (
                 <TableRow key={item.id}>
                   <TableRowColumn style={styles.columns.bot}>
                     {item.bot}
@@ -396,13 +404,15 @@ class IntentListPage extends React.Component {
 IntentListPage.propTypes = {
   intentList: PropTypes.array,
   getAllIntents: PropTypes.func.isRequired,
+  botList: PropTypes.array,
+  getAllBots: PropTypes.func.isRequired,
   deleteIntent: PropTypes.func.isRequired,
   deleteSuccess: PropTypes.bool.isRequired,
   errorMessage: PropTypes.string
 };
 
 function mapStateToProps(state) {
-  const { intentReducer } = state;
+  const { intentReducer, botReducer} = state;
   const {
     intentList,
     deleteSuccess,
@@ -411,9 +421,11 @@ function mapStateToProps(state) {
     errorMessage,
     user
   } = intentReducer;
+  const { botList } = botReducer;
 
   return {
     intentList,
+    botList,
     isFetching,
     isAuthenticated,
     errorMessage,
@@ -424,6 +436,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    getAllBots: filters => dispatch(loadBots(filters)),
     getAllIntents: filters => dispatch(loadIntents(filters)),
     deleteIntent: id => dispatch(deleteIntent(id))
   };

@@ -51,49 +51,11 @@
   ],
   "intents": [
     {
-      "bot": "Alfred",
-      "intentName": "Welcome",
-      "id": 1,
+      "intentName": "Welcome2",
       "response": {
-        "responseType": ""
-      }
-    },
-    {
-      "intentName": "Goodbye",
-      "bot": "luis",
-      "response": "A la prochaine !",
-      "id": 2
-    },
-    {
-      "response": {
-        "text": "hello",
-        "imageUrl": "a",
-        "cardTitle": "b",
-        "cardSubtitle": "c",
-        "buttonTitle": "d"
+        "responseType": "Text response"
       },
-      "id": 3
-    },
-    {
-      "bot": "Alfred",
-      "response": {
-        "text": "azd",
-        "imageUrl": "a",
-        "cardTitle": "b",
-        "cardSubtitle": "c",
-        "buttonTitle": "d"
-      },
-      "id": 4
-    },
-    {
-      "intentName": "Help",
-      "response": {
-        "imageUrl": "a",
-        "cardTitle": "b",
-        "cardSubtitle": "c",
-        "buttonTitle": "d"
-      },
-      "id": 5
+      "id": 1
     }
   ],
   "products": [

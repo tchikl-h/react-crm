@@ -21,12 +21,12 @@ export default (
       <Route path="form" component={FormPage} />
       <Route path="bot" component={BotFormPage} />
       <Route path="bot/:id" component={BotFormPage} />
-      <Route path="intent" component={IntentFormPage} />
-      <Route path="intent/:id" component={IntentFormPage} />
+      <Route path="bot/:id/intent" component={IntentFormPage} />
+      <Route path="bot/:id/intent/:nb" component={IntentFormPage} />
       <Route path="product" component={ProductFormPage} />
       <Route path="product/:id" component={ProductFormPage} />
       <Route path="bots" component={BotListPage} />
-      <Route path="intents" component={IntentListPage} />
+      <Route path="bot/:id/intents" component={IntentListPage} />
       <Route path="products" component={ProductListPage} />
       <Route path="about" component={AboutPage} />
       <Route path="*" component={NotFoundPage} />

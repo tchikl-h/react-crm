@@ -18,6 +18,7 @@ import ActionDelete from "material-ui/svg-icons/action/delete";
 import { getIntent, updateIntent, addIntent, newIntent } from "../actions/intent";
 import { loadBots } from "../actions/bot";
 import { loadProducts, loadCategories } from "../actions/product";
+import { loadIntents } from "../actions/intent";
 
 import { FormsyText, FormsySelect, FormsyDate } from "formsy-material-ui/lib"; // FormsyDate
 import Formsy from "formsy-react";
@@ -31,7 +32,7 @@ class IntentFormPage extends React.Component {
     super(props);
     autoBind(this);
     this.state = {
-      isFetching: this.props.routeParams.id ? true : false,
+      isFetching: this.props.routeParams.nb ? true : false,
       categoryId: 0,
       responseTypeValue: "",
       product: null,
@@ -55,8 +56,9 @@ class IntentFormPage extends React.Component {
   }
 
   componentWillMount() {
-    if (this.props.routeParams && this.props.routeParams.id) {
-      this.props.getIntent(this.props.routeParams.id);
+    if (this.props.routeParams && this.props.routeParams.nb) {
+      this.props.getIntent(this.props.routeParams.nb);
+      this.props.getAllIntents();
       this.props.getAllBots();
       this.props.getCategoryList();
     } else {
@@ -131,6 +133,7 @@ class IntentFormPage extends React.Component {
         this.props.updateIntent(this.state.intent);
       }
       else {
+        this.state.intent.id = this.props.intentList.filter(intent => intent.bot === this.props.botList[this.props.routeParams.id].name).length + 1;
         this.props.addIntent(this.state.intent);
       }
     }
@@ -232,6 +235,7 @@ class IntentFormPage extends React.Component {
     const {
       errorMessage,
       botList,
+      intentList,
       categoryList,
       productList
     } = this.props;
@@ -588,6 +592,8 @@ IntentFormPage.propTypes = {
   addSuccess: PropTypes.bool.isRequired,
   addIntent: PropTypes.func.isRequired,
   botList: PropTypes.array,
+  intentList: PropTypes.array,
+  getAllIntents: PropTypes.func.isRequired,
   categoryList: PropTypes.array,
   productList: PropTypes.array,
   getAllBots: PropTypes.func.isRequired,
@@ -599,6 +605,7 @@ function mapStateToProps(state) {
   const { botReducer, intentReducer, productReducer } = state;
   const { productList, categoryList } = productReducer;
   const { botList } = botReducer;
+  const { intentList } = intentReducer;
   const {
     intent,
     isFetching,
@@ -612,6 +619,7 @@ function mapStateToProps(state) {
     intent: intent || {},
     isFetching,
     botList,
+    intentList,
     categoryList,
     productList,
     addSuccess,

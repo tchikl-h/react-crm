@@ -29,6 +29,7 @@ import PageBase from "../components/PageBase";
 import Pagination from "../components/Pagination";
 import { connect } from "react-redux";
 import { loadBots, deleteBot } from "../actions/bot";
+import { loadIntents } from "../actions/intent";
 import Dialog from "material-ui/Dialog";
 import FlatButton from "material-ui/FlatButton";
 import Drawer from "material-ui/Drawer";
@@ -75,7 +76,9 @@ class BotListPage extends React.Component {
       props.getAllBots(this.state.search);
   }
 
-  componentWillMount() {}
+  componentWillMount() {
+    this.props.getAllIntents();
+  }
 
   /* eslint-disable */
   componentDidUpdate(prevProps, prevState) {
@@ -165,6 +168,7 @@ class BotListPage extends React.Component {
     const {
       errorMessage,
       botList,
+      intentList,
       deleteSuccess,
       isFetching
     } = this.props;
@@ -312,8 +316,9 @@ class BotListPage extends React.Component {
               stripedRows={this.state.stripedRows}
             >
               {this.state.pageOfItems.map(item => (
+                // +"/intent/"+ intentList.filter(intent => intent.bot === botList[item.id - 1].name).length
                 <TableRow key={item.id}>
-                <Link className="button" to={"/intent/" + item.id}>
+                <Link className="button" to={"/bot/" + item.id + "/intents"}>
                     <FloatingActionButton
                       zDepth={0}
                       mini={true}
@@ -423,14 +428,16 @@ class BotListPage extends React.Component {
 BotListPage.propTypes = {
   isFetching: PropTypes.bool,
   botList: PropTypes.array,
+  intentList: PropTypes.array,
   getAllBots: PropTypes.func.isRequired,
   deleteBot: PropTypes.func.isRequired,
   deleteSuccess: PropTypes.bool.isRequired,
+  getAllIntents: PropTypes.func.isRequired,
   errorMessage: PropTypes.string
 };
 
 function mapStateToProps(state) {
-  const { botReducer } = state;
+  const { botReducer, intentReducer } = state;
   const {
     botList,
     isFetching,
@@ -439,9 +446,11 @@ function mapStateToProps(state) {
     errorMessage,
     user
   } = botReducer;
+  const { intentList } = intentReducer;
 
   return {
     botList,
+    intentList,
     isFetching,
     isAuthenticated,
     errorMessage,
@@ -453,6 +462,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     getAllBots: filters => dispatch(loadBots(filters)),
+    getAllIntents: filters => dispatch(loadIntents(filters)),
     deleteBot: id => dispatch(deleteBot(id))
   };
 }
