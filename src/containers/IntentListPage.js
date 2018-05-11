@@ -52,7 +52,7 @@ class IntentListPage extends React.Component {
       deselectOnClickaway: true,
       showCheckboxes: false,
       pageOfItems: [],
-      intentId: null,
+      intentNb: null,
       dialogText: "Are you sure to do this?",
       search: {
         product: ""
@@ -72,9 +72,9 @@ class IntentListPage extends React.Component {
     this.handleSnackBarClose = this.handleSnackBarClose.bind(this);
 
     if (this.props.intentList || this.props.intentList.length < 1)
-      props.getAllIntents(this.state.search);
+      props.getAllIntents(this.state.search, this.props.routeParams.nb);
     if (this.props.botList || this.props.botList.length < 1)
-      props.getAllIntents(this.state.search);
+      props.getAllIntents(this.state.search, this.props.routeParams.nb);
   }
 
   componentWillMount() {
@@ -114,9 +114,9 @@ class IntentListPage extends React.Component {
       this.setState({ pageOfItems: pageOfItems });
   }
 
-  onDelete(id) {
-    if (id) {
-      this.handleOpen(id);
+  onDelete(nb) {
+    if (nb) {
+      this.handleOpen(nb);
     }
   }
 
@@ -126,27 +126,27 @@ class IntentListPage extends React.Component {
 
   handleSearch() {
     this.setState({ searchOpen: !this.state.searchOpen });
-    this.props.getAllIntents(this.state.search);
+    this.props.getAllIntents(this.state.search, this.props.routeParams.nb);
   }
 
-  handleOpen(id) {
+  handleOpen(nb) {
     this.setState({ dialogText: "Are you sure to delete this data?" });
     this.setState({ open: true });
-    this.setState({ intentId: id });
+    this.setState({ intentNb: nb });
   }
 
   handleClose(isConfirmed) {
     this.setState({ open: false });
 
-    if (isConfirmed && this.state.intentId) {
-      this.props.deleteIntent(this.state.intentId);
-      this.setState({ intentId: null });
+    if (isConfirmed && this.state.intentNb) {
+      this.props.deleteIntent(this.props.routeParams.nb, this.state.intentNb);
+      this.setState({ intentNb: null });
     }
   }
 
   handleSearch() {
     this.setState({ searchOpen: !this.state.searchOpen });
-    this.props.getAllIntents(this.state.search);
+    this.props.getAllIntents(this.state.search, this.props.routeParams.nb);
   }
 
   handleSearchFilter(event) {
@@ -256,11 +256,11 @@ class IntentListPage extends React.Component {
     ];
     return (
       <PageBase
-        title={"Intents (" + intentList.filter(item => item.bot === botList[this.props.routeParams.id - 1].name).length + ")"}
+        title={"Intents (" + intentList.filter(item => item.bot === botList[this.props.routeParams.nb - 1].name).length + ")"}
         navigation="Reetek React CRM / Intent"
       >
         <div>
-          <Link to={"/bot/"+this.props.routeParams.id+"/intent"}>
+          <Link to={"/bot/"+this.props.routeParams.nb+"/intent"}>
             <FloatingActionButton style={styles.fab} backgroundColor={pink500}>
               <ContentAdd />
             </FloatingActionButton>
@@ -311,8 +311,8 @@ class IntentListPage extends React.Component {
               showRowHover={this.state.showRowHover}
               stripedRows={this.state.stripedRows}
             >
-              {this.state.pageOfItems.filter(item => item.bot === botList[this.props.routeParams.id - 1].name).map(item => (
-                <TableRow key={item.id}>
+              {this.state.pageOfItems.filter(item => item.bot === botList[this.props.routeParams.nb - 1].name).map(item => (
+                <TableRow key={item.nb}>
                   <TableRowColumn style={styles.columns.bot}>
                     {item.bot}
                   </TableRowColumn>
@@ -323,7 +323,7 @@ class IntentListPage extends React.Component {
                     {item.response.text}
                   </TableRowColumn>
                   <TableRowColumn style={styles.columns.edit}>
-                    <Link className="button" to={"/intent/" + item.id}>
+                    <Link className="button" to={"/intent/" + item.nb}>
                       <FloatingActionButton
                         zDepth={0}
                         mini={true}
@@ -340,7 +340,7 @@ class IntentListPage extends React.Component {
                       mini={true}
                       backgroundColor={grey200}
                       iconStyle={styles.deleteButton}
-                      onTouchTap={() => this.onDelete(item.id)}
+                      onTouchTap={() => this.onDelete(item.nb)}
                     >
                       <ActionDelete />
                     </FloatingActionButton>
@@ -437,7 +437,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     getAllBots: filters => dispatch(loadBots(filters)),
-    getAllIntents: filters => dispatch(loadIntents(filters)),
+    getAllIntents: (filters, nb) => dispatch(loadIntents(filters, nb)),
     deleteIntent: id => dispatch(deleteIntent(id))
   };
 }

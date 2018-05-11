@@ -20,13 +20,13 @@ export default (
       <Route path="dashboard" component={Dashboard} />
       <Route path="form" component={FormPage} />
       <Route path="bot" component={BotFormPage} />
-      <Route path="bot/:id" component={BotFormPage} />
-      <Route path="bot/:id/intent" component={IntentFormPage} />
-      <Route path="bot/:id/intent/:nb" component={IntentFormPage} />
+      <Route path="bot/:nb" component={BotFormPage} />
+      <Route path="bot/:nb/intent" component={IntentFormPage} />
+      <Route path="bot/:nb/intent/:id" component={IntentFormPage} />
       <Route path="product" component={ProductFormPage} />
       <Route path="product/:id" component={ProductFormPage} />
       <Route path="bots" component={BotListPage} />
-      <Route path="bot/:id/intents" component={IntentListPage} />
+      <Route path="bot/:nb/intents" component={IntentListPage} />
       <Route path="products" component={ProductListPage} />
       <Route path="about" component={AboutPage} />
       <Route path="*" component={NotFoundPage} />

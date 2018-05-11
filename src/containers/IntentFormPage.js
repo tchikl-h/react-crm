@@ -57,8 +57,7 @@ class IntentFormPage extends React.Component {
 
   componentWillMount() {
     if (this.props.routeParams && this.props.routeParams.nb) {
-      this.props.getIntent(this.props.routeParams.nb);
-      this.props.getAllIntents();
+      this.props.getIntent(this.props.routeParams.id, this.props.routeParams.nb);
       this.props.getAllBots();
       this.props.getCategoryList();
     } else {
@@ -85,7 +84,7 @@ class IntentFormPage extends React.Component {
       (!this.props.addSuccess && nextProps.addSuccess) ||
       (!this.props.updateSuccess && nextProps.updateSuccess)
     ) {
-      this.props.router.push("/intents");
+      this.props.router.push("/bot/" + this.props.routeParams.nb + "/intents");
     }
   }
 
@@ -129,12 +128,18 @@ class IntentFormPage extends React.Component {
     if (action && action === "AddProduct") {
       this.setState({ open: true });
     } else {
-      if (this.state.intent.id) {
+      this.state.intent.id = this.props.routeParams.id;
+      this.state.intent.nb = this.props.routeParams.nb;
+      if (this.state.intent.nb && this.state.intent.id) {
         this.props.updateIntent(this.state.intent);
       }
       else {
-        this.state.intent.id = this.props.intentList.filter(intent => intent.bot === this.props.botList[this.props.routeParams.id].name).length + 1;
-        this.props.addIntent(this.state.intent);
+        this.state.intent.bot = this.props.botList[this.props.routeParams.nb - 1].name;
+        this.state.intent.id = (this.props.intentList.filter(intent => intent).length + 1).toString();//this.props.intentList.filter(intent => intent.bot === this.props.botList[this.props.routeParams.id - 1].name).length + 1;
+        this.state.intent.nb = this.props.routeParams.id;
+        if (this.state.intent.id) {
+          this.props.addIntent(this.state.intent);
+        }
       }
     }
   }
@@ -295,8 +300,8 @@ class IntentFormPage extends React.Component {
     if (isFetching) {
       return <CircularProgress />;
     } else {
-      if (botList && botList[window.location.href.split("/")[4] - 1])
-        botName = botList[window.location.href.split("/")[4] - 1].name;
+      if (botList && botList[this.props.routeParams.nb - 1])
+        botName = botList[this.props.routeParams.nb - 1].name;
       let responseType = [{"text":"Text response", "id":0}, {"text":"Image", "id":1}, {"text":"Card", "id":2}, {"text":"Quick replies", "id":3}];
       
       return (
@@ -498,7 +503,7 @@ class IntentFormPage extends React.Component {
                 primary={true}
               />}
               <div style={styles.buttons}>
-              <Link to="/intents">
+              <Link to={"/bot/" + this.props.routeParams.nb + "/intents"}>
                 <RaisedButton label="Cancel" />
               </Link>
 
@@ -593,7 +598,6 @@ IntentFormPage.propTypes = {
   addIntent: PropTypes.func.isRequired,
   botList: PropTypes.array,
   intentList: PropTypes.array,
-  getAllIntents: PropTypes.func.isRequired,
   categoryList: PropTypes.array,
   productList: PropTypes.array,
   getAllBots: PropTypes.func.isRequired,
@@ -632,7 +636,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     newIntent: () => dispatch(newIntent()),
-    getIntent: id => dispatch(getIntent(id)),
+    getIntent: (id, nb) => dispatch(getIntent(id, nb)),
     updateIntent: intent => dispatch(updateIntent(intent)),
     addIntent: intent => dispatch(addIntent(intent)),
     getCategoryList: () => dispatch(loadCategories()),

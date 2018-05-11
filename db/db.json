@@ -51,11 +51,14 @@
   ],
   "intents": [
     {
-      "intentName": "Welcome2",
+      "intentName": "a",
+      "bot": "Alfred",
       "response": {
+        "text": "a",
         "responseType": "Text response"
       },
-      "id": 1
+      "id": "1",
+      "botId": "undefined"
     }
   ],
   "products": [

@@ -20,10 +20,10 @@ import {
 
 // Intent actions
 
-export function loadIntents(filters) {
+export function loadIntents(filters, nb) {
   return {
     [CALL_API]: {
-      endpoint: "intents?_expand=intentName",
+      endpoint: `bot/${nb}/intents?_expand=intentName`,
       intents: [],
       filters: filters,
       types: [LOAD_INTENTS_REQUEST, LOAD_INTENTS_SUCCESS, LOAD_INTENTS_FAILURE]
@@ -31,10 +31,10 @@ export function loadIntents(filters) {
   };
 }
 
-export function getIntent(id) {
+export function getIntent(id, nb) {
   return {
     [CALL_API]: {
-      endpoint: `intents/${id}?_expand=intentName`,
+      endpoint: `bot/${nb}/intents/${id}?_expand=intentName`,
       intent: {},
       types: [GET_INTENT_REQUEST, GET_INTENT_SUCCESS, GET_INTENT_FAILURE]
     }
@@ -44,7 +44,7 @@ export function getIntent(id) {
 export function updateIntent(intent) {
   return {
     [CALL_API]: {
-      endpoint: `intents/${intent.id}`,
+      endpoint: `bot/${intent.nb}/intents/${intent.id}`,
       data: intent,
       method: "PUT",
       authenticated: true,
@@ -57,7 +57,7 @@ export function updateIntent(intent) {
 export function addIntent(intent) {
   return {
     [CALL_API]: {
-      endpoint: `intents`,
+      endpoint: `bot/${intent.nb}/intents`,
       data: intent,
       method: "POST",
       authenticated: true,
@@ -73,10 +73,10 @@ export function newIntent() {
   };
 }
 
-export function deleteIntent(id) {
+export function deleteIntent(id, nb) {
   return {
     [CALL_API]: {
-      endpoint: `intents/${id}`,
+      endpoint: `bot/${nb}/intents/${id}`,
       method: "DELETE",
       authenticated: true,
       types: [DELETE_INTENT_REQUEST, DELETE_INTENT_SUCCESS, DELETE_INTENT_FAILURE]

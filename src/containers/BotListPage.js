@@ -462,7 +462,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     getAllBots: filters => dispatch(loadBots(filters)),
-    getAllIntents: filters => dispatch(loadIntents(filters)),
+    getAllIntents: (filters, nb) => dispatch(loadIntents(filters, nb)),
     deleteBot: id => dispatch(deleteBot(id))
   };
 }
