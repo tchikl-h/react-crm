@@ -76,7 +76,7 @@ export function newIntent() {
 export function deleteIntent(id, nb) {
   return {
     [CALL_API]: {
-      endpoint: `bot/${nb}/intents/${id}`,
+      endpoint: `intents/${id}`,
       method: "DELETE",
       authenticated: true,
       types: [DELETE_INTENT_REQUEST, DELETE_INTENT_SUCCESS, DELETE_INTENT_FAILURE]

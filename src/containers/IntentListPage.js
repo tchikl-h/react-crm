@@ -101,7 +101,7 @@ class IntentListPage extends React.Component {
       !nextProps.errorMessage &&
       !nextProps.isFetching
     ) {
-      this.props.getAllIntents();
+      this.props.getAllIntents(this.state.search, this.props.routeParams.nb);
     }
   }
 
@@ -139,7 +139,7 @@ class IntentListPage extends React.Component {
     this.setState({ open: false });
 
     if (isConfirmed && this.state.intentNb) {
-      this.props.deleteIntent(this.props.routeParams.nb, this.state.intentNb);
+      this.props.deleteIntent(this.state.intentNb, this.props.routeParams.nb);
       this.setState({ intentNb: null });
     }
   }
@@ -312,7 +312,7 @@ class IntentListPage extends React.Component {
               stripedRows={this.state.stripedRows}
             >
               {this.state.pageOfItems.filter(item => item.bot === botList[this.props.routeParams.nb - 1].name).map(item => (
-                <TableRow key={item.nb}>
+                <TableRow key={item.id}>
                   <TableRowColumn style={styles.columns.bot}>
                     {item.bot}
                   </TableRowColumn>
@@ -323,7 +323,7 @@ class IntentListPage extends React.Component {
                     {item.response.text}
                   </TableRowColumn>
                   <TableRowColumn style={styles.columns.edit}>
-                    <Link className="button" to={"/intent/" + item.nb}>
+                    <Link className="button" to={"/intent/" + item.id}>
                       <FloatingActionButton
                         zDepth={0}
                         mini={true}
@@ -340,7 +340,7 @@ class IntentListPage extends React.Component {
                       mini={true}
                       backgroundColor={grey200}
                       iconStyle={styles.deleteButton}
-                      onTouchTap={() => this.onDelete(item.nb)}
+                      onTouchTap={() => this.onDelete(item.id)}
                     >
                       <ActionDelete />
                     </FloatingActionButton>
@@ -438,7 +438,7 @@ function mapDispatchToProps(dispatch) {
   return {
     getAllBots: filters => dispatch(loadBots(filters)),
     getAllIntents: (filters, nb) => dispatch(loadIntents(filters, nb)),
-    deleteIntent: id => dispatch(deleteIntent(id))
+    deleteIntent: (id, nb) => dispatch(deleteIntent(id, nb))
   };
 }
 

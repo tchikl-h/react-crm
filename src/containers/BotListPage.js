@@ -252,7 +252,7 @@ class BotListPage extends React.Component {
         onTouchTap={() => this.handleClose(true)}
       />
     ]
-
+    
     return (
       <PageBase
         title={"Bots (" + botList.length + ")"}

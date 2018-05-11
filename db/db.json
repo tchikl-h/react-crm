@@ -51,14 +51,48 @@
   ],
   "intents": [
     {
+      "intentName": "b",
+      "bot": "Alfred",
+      "response": {
+        "text": "b",
+        "responseType": "Text response"
+      },
+      "id": "8",
+      "nb": "1",
+      "botId": "1"
+    },
+    {
+      "intentName": "c",
+      "bot": "Alfred",
+      "response": {
+        "text": "c",
+        "responseType": "Text response"
+      },
+      "id": "9",
+      "nb": "1",
+      "botId": "1"
+    },
+    {
+      "intentName": "d",
+      "bot": "Alfred",
+      "response": {
+        "text": "d",
+        "responseType": "Text response"
+      },
+      "id": "10",
+      "nb": "1",
+      "botId": "1"
+    },
+    {
       "intentName": "a",
       "bot": "Alfred",
       "response": {
         "text": "a",
         "responseType": "Text response"
       },
-      "id": "1",
-      "botId": "undefined"
+      "id": "11",
+      "nb": "1",
+      "botId": "1"
     }
   ],
   "products": [

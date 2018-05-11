@@ -37,7 +37,7 @@ class IntentFormPage extends React.Component {
       responseTypeValue: "",
       product: null,
       open: false,
-      intent: {},
+      intent: [{nb: ""}],
       name: '',
       shareholders: [{ name: '' }],
     };
@@ -56,7 +56,7 @@ class IntentFormPage extends React.Component {
   }
 
   componentWillMount() {
-    if (this.props.routeParams && this.props.routeParams.nb) {
+    if (this.props.routeParams && this.props.routeParams.id) {
       this.props.getIntent(this.props.routeParams.id, this.props.routeParams.nb);
       this.props.getAllBots();
       this.props.getCategoryList();
@@ -103,6 +103,7 @@ class IntentFormPage extends React.Component {
   handleClick(event, action) {
     event.preventDefault();
     console.log(event);
+    console.log("hello !");
     this.state.intent.response = {};
     this.state.intent.response.text = this.state.intent.text;
     this.state.intent.response.imageUrl = this.state.intent.imageUrl;
@@ -128,15 +129,16 @@ class IntentFormPage extends React.Component {
     if (action && action === "AddProduct") {
       this.setState({ open: true });
     } else {
-      this.state.intent.id = this.props.routeParams.id;
-      this.state.intent.nb = this.props.routeParams.nb;
       if (this.state.intent.nb && this.state.intent.id) {
         this.props.updateIntent(this.state.intent);
       }
       else {
         this.state.intent.bot = this.props.botList[this.props.routeParams.nb - 1].name;
-        this.state.intent.id = (this.props.intentList.filter(intent => intent).length + 1).toString();//this.props.intentList.filter(intent => intent.bot === this.props.botList[this.props.routeParams.id - 1].name).length + 1;
-        this.state.intent.nb = this.props.routeParams.id;
+        console.log("highest id => "+this.props.intentList[this.props.intentList.length - 1].id + 1);
+        this.state.intent.id = (parseInt(this.props.intentList[this.props.intentList.length - 1].id) + 1).toString();//this.props.intentList.filter(intent => intent.bot === this.props.botList[this.props.routeParams.id - 1].name).length + 1;
+        this.state.intent.nb = this.props.routeParams.nb;
+        console.log("id => "+this.state.intent.id);
+        console.log("nb => "+this.state.intent.nb);
         if (this.state.intent.id) {
           this.props.addIntent(this.state.intent);
         }
@@ -601,6 +603,7 @@ IntentFormPage.propTypes = {
   categoryList: PropTypes.array,
   productList: PropTypes.array,
   getAllBots: PropTypes.func.isRequired,
+  getAllIntents: PropTypes.func.isRequired,
   getCategoryList: PropTypes.func.isRequired,
   errorMessage: PropTypes.string
 };
@@ -641,7 +644,8 @@ function mapDispatchToProps(dispatch) {
     addIntent: intent => dispatch(addIntent(intent)),
     getCategoryList: () => dispatch(loadCategories()),
     getProductList: filters => dispatch(loadProducts(filters)),
-    getAllBots: () => dispatch(loadBots())
+    getAllBots: () => dispatch(loadBots()),
+    getAllIntents: (filters, nb) => dispatch(loadIntents(filters, nb)),
   };
 }
 
