@@ -51,46 +51,24 @@
   ],
   "intents": [
     {
-      "intentName": "b",
+      "intentName": "Welcome",
       "bot": "Alfred",
       "response": {
-        "text": "b",
+        "text": "Hello",
         "responseType": "Text response"
       },
-      "id": "8",
+      "id": "1",
       "nb": "1",
       "botId": "1"
     },
     {
-      "intentName": "c",
+      "intentName": "Goodbye",
       "bot": "Alfred",
       "response": {
-        "text": "c",
+        "text": "bye",
         "responseType": "Text response"
       },
-      "id": "9",
-      "nb": "1",
-      "botId": "1"
-    },
-    {
-      "intentName": "d",
-      "bot": "Alfred",
-      "response": {
-        "text": "d",
-        "responseType": "Text response"
-      },
-      "id": "10",
-      "nb": "1",
-      "botId": "1"
-    },
-    {
-      "intentName": "a",
-      "bot": "Alfred",
-      "response": {
-        "text": "a",
-        "responseType": "Text response"
-      },
-      "id": "11",
+      "id": "2",
       "nb": "1",
       "botId": "1"
     }

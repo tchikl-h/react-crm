@@ -134,8 +134,7 @@ class IntentFormPage extends React.Component {
       }
       else {
         this.state.intent.bot = this.props.botList[this.props.routeParams.nb - 1].name;
-        console.log("highest id => "+this.props.intentList[this.props.intentList.length - 1].id + 1);
-        this.state.intent.id = (parseInt(this.props.intentList[this.props.intentList.length - 1].id) + 1).toString();//this.props.intentList.filter(intent => intent.bot === this.props.botList[this.props.routeParams.id - 1].name).length + 1;
+        this.state.intent.id = this.props.intentList[0] ? (parseInt(this.props.intentList[this.props.intentList.length - 1].id) + 1).toString() : "1";
         this.state.intent.nb = this.props.routeParams.nb;
         console.log("id => "+this.state.intent.id);
         console.log("nb => "+this.state.intent.nb);
