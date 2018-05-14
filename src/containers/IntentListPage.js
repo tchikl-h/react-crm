@@ -32,6 +32,8 @@ import Drawer from "material-ui/Drawer";
 import RaisedButton from "material-ui/RaisedButton";
 import TextField from "material-ui/TextField";
 import Snackbar from "material-ui/Snackbar";
+// import { View, Text, Image } from 'react-native'
+import Card from 'material-ui/Card'
 
 class IntentListPage extends React.Component {
   constructor(props) {
@@ -320,7 +322,7 @@ class IntentListPage extends React.Component {
                     {item.intentName}
                   </TableRowColumn>
                   <TableRowColumn style={styles.columns.response}>
-                    {item.response.text}
+                    {item.response.text || item.response.imageUrl && <div><img src={ item.response.imageUrl} style={{width: 100, height: 100}}/></div> || item.response.title}
                   </TableRowColumn>
                   <TableRowColumn style={styles.columns.edit}>
                     <Link className="button" to={"/bot/"+item.nb+"/intent/"+item.id}>

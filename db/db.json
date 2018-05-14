@@ -44,6 +44,19 @@
       "nb": "1",
       "botId": "1",
       "intentName": "Goodbye"
+    },
+    {
+      "intentName": "Fallback",
+      "bot": "Lilou",
+      "response": {
+        "responseType": "Quick replies",
+        "title": "Je n'ai pas compris, avez-vous un soucis ?",
+        "response1": "oui",
+        "response2": "non"
+      },
+      "id": "3",
+      "nb": "1",
+      "botId": "1"
     }
   ],
   "products": [
