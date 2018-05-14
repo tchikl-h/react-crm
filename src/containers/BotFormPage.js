@@ -22,6 +22,7 @@ import {
 import { FormsyText } from "formsy-material-ui/lib";
 import Formsy from "formsy-react";
 import autoBind from "react-autobind";
+import BotListPage from "./BotListPage";
 
 class BotFormPage extends React.Component {
   constructor(props) {
@@ -92,12 +93,21 @@ class BotFormPage extends React.Component {
 
   handleClick(event) {
     event.preventDefault();
-    if (this.state.bot.id) this.props.updateBot(this.state.bot);
+    if (this.props.botList[this.props.routeParams.nb - 1]) {
+      this.state.bot.id = this.props.botList[this.props.routeParams.nb - 1].id;
+      if (!this.state.bot.name) {
+        this.state.bot.name = this.props.botList[this.props.routeParams.nb - 1].name;
+      }
+      if (!this.state.bot.description) {
+        this.state.bot.description = this.props.botList[this.props.routeParams.nb - 1].description;
+      }
+      this.props.updateBot(this.state.bot);
+    }
     else this.props.addBot(this.state.bot);
   }
 
   render() {
-    const { errorMessage } = this.props;
+    const { errorMessage, botList } = this.props;
 
     const { isFetching, bot } = this.state;
 
@@ -141,7 +151,7 @@ class BotFormPage extends React.Component {
                   name="name"
                   onChange={this.handleChange}
                   fullWidth={true}
-                  value={bot.name ? bot.name : ""}
+                  value={this.props.botList && this.props.botList[this.props.routeParams.nb - 1] && this.props.botList[this.props.routeParams.nb - 1].name ? this.props.botList[this.props.routeParams.nb - 1].name : ""}
                   validations={{
                     isWords: true
                   }}
@@ -158,7 +168,7 @@ class BotFormPage extends React.Component {
                   name="description"
                   onChange={this.handleChange}
                   fullWidth={true}
-                  value={bot.description ? bot.description : ""}
+                  value={this.props.botList && this.props.botList[this.props.routeParams.nb - 1] && this.props.botList[this.props.routeParams.nb - 1].description ? this.props.botList[this.props.routeParams.nb - 1].description : ""}
                   validations={{
                     isWords: true
                   }}
@@ -222,7 +232,8 @@ BotFormPage.propTypes = {
   updateSuccess: PropTypes.bool.isRequired,
   addSuccess: PropTypes.bool.isRequired,
   addBot: PropTypes.func.isRequired,
-  errorMessage: PropTypes.string
+  errorMessage: PropTypes.string,
+  botList: PropTypes.array
 };
 
 function mapStateToProps(state) {
@@ -234,7 +245,8 @@ function mapStateToProps(state) {
     addSuccess,
     errorMessage,
     isAuthenticated,
-    user
+    user,
+    botList
   } = botReducer;
 
   return {
@@ -244,7 +256,8 @@ function mapStateToProps(state) {
     updateSuccess,
     errorMessage,
     isAuthenticated,
-    user
+    user,
+    botList,
   };
 }
 

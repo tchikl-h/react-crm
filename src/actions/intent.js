@@ -44,7 +44,7 @@ export function getIntent(id, nb) {
 export function updateIntent(intent) {
   return {
     [CALL_API]: {
-      endpoint: `bot/${intent.nb}/intents/${intent.id}`,
+      endpoint: `intents/${intent.id}`,
       data: intent,
       method: "PUT",
       authenticated: true,

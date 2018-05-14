@@ -10,67 +10,40 @@
   },
   "bots": [
     {
-      "name": "Alfred",
-      "description": "hello",
-      "id": 1
+      "description": "bot Expertime",
+      "id": 1,
+      "name": "Lilou"
     },
     {
-      "name": "luis",
-      "description": "test Luis",
-      "id": 2
-    },
-    {
-      "name": "John",
-      "description": "hi",
-      "id": 3
-    },
-    {
-      "name": "a",
-      "description": "s",
-      "id": 4
-    },
-    {
-      "name": "ufyu",
-      "id": 5
-    },
-    {
-      "name": "uyh",
-      "description": "oipok",
-      "id": 6
-    },
-    {
-      "name": "zfezd",
-      "description": "azed",
-      "id": 7
-    },
-    {
-      "name": "hth",
-      "description": "ht",
-      "id": 8
+      "description": "bot LVA",
+      "id": 2,
+      "name": "LVA"
     }
   ],
   "intents": [
     {
       "intentName": "Welcome",
-      "bot": "Alfred",
+      "bot": "Lilou",
       "response": {
-        "text": "Hello",
-        "responseType": "Text response"
+        "imageUrl": "https://media.giphy.com/media/3oKIPsx2VAYAgEHC12/giphy.gif",
+        "cardTitle": "Hello",
+        "cardSubtitle": "dog waving",
+        "responseType": "Card"
       },
       "id": "1",
       "nb": "1",
       "botId": "1"
     },
     {
-      "intentName": "Goodbye",
-      "bot": "Alfred",
+      "bot": "Lilou",
       "response": {
-        "text": "bye",
+        "text": "Have a nice day",
         "responseType": "Text response"
       },
       "id": "2",
       "nb": "1",
-      "botId": "1"
+      "botId": "1",
+      "intentName": "Goodbye"
     }
   ],
   "products": [

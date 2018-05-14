@@ -25,121 +25,119 @@ import {
   grey200,
   grey500,
   green400,
+  orange400,
   white
 } from "material-ui/styles/colors";
+import ActionFace from "material-ui/svg-icons/action/face";
 import ContentAdd from "material-ui/svg-icons/content/add";
 import BotListPage from "./BotListPage";
 import botReducer from "../reducers";
 require("babel-core/register");
 require("babel-polyfill");
 
-const DashboardPage = () => {
-  const styles = {
-    editButton: {
-      paddingRight: 25,
-      paddingBottom: 15,
-      display: "block"
-    },
-    editButtonIcon: {
-      fill: white
-    },
-    fab: {
-      // margin: 0,
-      left: 20,
-      top: 60,
-      left: "auto",
-      position: "fixed",
-      marginLeft: 180
-    },
-  };
-
-  function requestAPI(method, url) {
-    return new Promise((resolve, reject) => {
-      var xhr = new XMLHttpRequest();
-      xhr.open(method, url);
-      xhr.responseType = 'json';
-      xhr.onload = function() {
-        var status = xhr.status;
-        if (status === 200) {
-          resolve(xhr.response);
-        } else {
-          reject(xhr.statusText);
-        }
-      };
-      xhr.onerror = function () {
+function requestAPI(method, url) {
+  return new Promise((resolve, reject) => {
+    var xhr = new XMLHttpRequest();
+    xhr.open(method, url);
+    xhr.responseType = 'json';
+    xhr.onload = function() {
+      var status = xhr.status;
+      if (status === 200) {
+        resolve(xhr.response);
+      } else {
         reject(xhr.statusText);
-      };
-      xhr.send();
-    })
+      }
+    };
+    xhr.onerror = function () {
+      reject(xhr.statusText);
+    };
+    xhr.send();
+  })
+}
+
+class DashboardPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: []
+    };
   }
 
-  var DisplayBotList = (nbBot) => {
-    var indents = [];
-    for (var i = 0; i < nbBot; i++) {
-      indents.push(<span className='indent' key={i}><div className="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-b-15 ">
-      <InfoBox
-        Icon={Face}
-        color={orange600}
-        title={"New Members"}
-        value={"ok"}
-      />
-    </div></span>);
-    }
-    return (
-      <div>
-        <h3 style={globalStyles.navigation}>Application / Dashboard</h3>
-  
-        <div className="row">
-        <Link to="/bot">
-          <FloatingActionButton
-            backgroundColor="lightblue"
-            secondary={true}
-            style={styles.fab}
-            backgroundColor={pink500}
-          >
-            <ContentAdd />
-          </FloatingActionButton>
-        </Link>
-  
-        {indents}
-        </div>
-  
-        <div className="row">
-          <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-md m-b-15">
-            <NewIntents data={Data.dashBoardPage.newIntents} />
-          </div>
-  
-          <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 m-b-15">
-            <MonthlySales data={Data.dashBoardPage.monthlySales} />
-          </div>
-        </div>
-  
-        <div className="row">
-          <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-b-15 ">
-            {/*<RecentlyProducts data={Data.dashBoardPage.recentProducts}/>*/}
-            <LineBarChart data={Data.dashBoardPage.lineBarChart} />
-          </div>
-  
-          <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-b-15 ">
-            <BrowserUsage data={Data.dashBoardPage.browserUsage} />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  requestAPI('GET', 'http://localhost:5354/bots')
-    .then(function (botList) {
-      console.log("return 1")
-      return DisplayBotList(botList.length); // Appel asynchrone avec promise (success)
+  componentDidMount() {
+    requestAPI('GET', 'http://localhost:5354/bots')
+    .then((botList) => {
+      this.setState({data: botList});
     })
     .catch(function (err) {
-      return DisplayBotList(0); // Appel asynchrone avec promise (error)
-      console.error('Augh, there was an error!', err.statusText);
+      console.log("error requesting /bots");
     });
-  console.log("return 2"); // retour basique
-  return DisplayBotList(4);
-  
-};
+  }
+
+  render() {
+    const styles = {
+      editButton: {
+        paddingRight: 25,
+        paddingBottom: 15,
+        display: "block"
+      },
+      editButtonIcon: {
+        fill: white
+      },
+      fab: {
+        // margin: 0,
+        left: 20,
+        top: 60,
+        left: "auto",
+        position: "fixed",
+        marginLeft: 180
+      },
+      faceButton: {
+        paddingRight: 25,
+        height: 10,
+        marginTop: 10
+      },
+    };
+    if (this.state.data) {
+          var indents = [];
+          for (var i = 0; i < this.state.data.length; i++) {
+            indents.push(<span className='indent' key={i}><div className="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-b-15 ">
+            <Link className="button" to={"/bot/" + this.state.data[i].id + "/intents"}>
+            <InfoBox
+                Icon={Face}
+                color={orange600}
+                title={this.state.data[i].name}
+                value={this.state.data[i].description}
+              />
+            </Link>
+            </div>
+          </span>);
+          }
+          return (
+            <div>
+              <h3 style={globalStyles.navigation}>Application / Dashboard</h3>
+        
+              <div className="row">
+              <Link to="/bot">
+                <FloatingActionButton
+                  backgroundColor="lightblue"
+                  secondary={true}
+                  style={styles.fab}
+                  backgroundColor={pink500}
+                >
+                  <ContentAdd />
+                </FloatingActionButton>
+              </Link>
+        
+              {indents}
+              </div>
+            </div>
+          );
+        }
+    else {
+      console.log("loading");
+      return <div>Loading...</div>;
+    }
+  }
+}
 
 export default DashboardPage;

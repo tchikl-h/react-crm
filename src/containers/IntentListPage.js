@@ -256,7 +256,7 @@ class IntentListPage extends React.Component {
     ];
     return (
       <PageBase
-        title={"Intents (" + intentList.filter(item => item.bot === botList[this.props.routeParams.nb - 1].name).length + ")"}
+        title={"Intents (" + intentList.filter(item => botList && botList[this.props.routeParams.nb - 1] && item.bot === botList[this.props.routeParams.nb - 1].name).length + ")"}
         navigation="Reetek React CRM / Intent"
       >
         <div>
@@ -311,7 +311,7 @@ class IntentListPage extends React.Component {
               showRowHover={this.state.showRowHover}
               stripedRows={this.state.stripedRows}
             >
-              {this.state.pageOfItems.filter(item => item.bot === botList[this.props.routeParams.nb - 1].name).map(item => (
+              {this.state.pageOfItems.filter(item => botList && botList[this.props.routeParams.nb - 1] && item.bot === botList[this.props.routeParams.nb - 1].name).map(item => (
                 <TableRow key={item.id}>
                   <TableRowColumn style={styles.columns.bot}>
                     {item.bot}
@@ -323,7 +323,7 @@ class IntentListPage extends React.Component {
                     {item.response.text}
                   </TableRowColumn>
                   <TableRowColumn style={styles.columns.edit}>
-                    <Link className="button" to={"/intent/" + item.id}>
+                    <Link className="button" to={"/bot/"+item.nb+"/intent/"+item.id}>
                       <FloatingActionButton
                         zDepth={0}
                         mini={true}

@@ -103,7 +103,6 @@ class IntentFormPage extends React.Component {
   handleClick(event, action) {
     event.preventDefault();
     console.log(event);
-    console.log("hello !");
     this.state.intent.response = {};
     this.state.intent.response.text = this.state.intent.text;
     this.state.intent.response.imageUrl = this.state.intent.imageUrl;
@@ -129,15 +128,19 @@ class IntentFormPage extends React.Component {
     if (action && action === "AddProduct") {
       this.setState({ open: true });
     } else {
-      if (this.state.intent.nb && this.state.intent.id) {
+      if (this.props.intentList[this.props.routeParams.id - 1].nb && this.props.intentList[this.props.routeParams.id - 1].id) {
+        this.state.intent.id = this.props.intentList[this.props.routeParams.id - 1].id;
+        this.state.intent.nb = this.props.intentList[this.props.routeParams.id - 1].nb;
+        this.state.intent.botId = this.props.intentList[this.props.routeParams.id - 1].botId;
+        if ( this.props.intentList[this.props.routeParams.id - 1].intentName) {
+          this.state.intent.intentName = this.props.intentList[this.props.routeParams.id - 1].intentName;
+        }
         this.props.updateIntent(this.state.intent);
       }
       else {
         this.state.intent.bot = this.props.botList[this.props.routeParams.nb - 1].name;
         this.state.intent.id = this.props.intentList[0] ? (parseInt(this.props.intentList[this.props.intentList.length - 1].id) + 1).toString() : "1";
         this.state.intent.nb = this.props.routeParams.nb;
-        console.log("id => "+this.state.intent.id);
-        console.log("nb => "+this.state.intent.nb);
         if (this.state.intent.id) {
           this.props.addIntent(this.state.intent);
         }
@@ -320,10 +323,7 @@ class IntentFormPage extends React.Component {
                   name="intentName"
                   onChange={this.handleChange}
                   fullWidth={true}
-                  value={intent.intentName ? intent.intentName : ""}
-                  validations={{
-                    isWords: true
-                  }}
+                  value={this.props.intentList && this.props.intentList[this.props.routeParams.id - 1] && this.props.intentList[this.props.routeParams.id - 1].intentName ? this.props.intentList[this.props.routeParams.id - 1].intentName : ""}
                   validationErrors={{
                     isWords: "Please provide valid intent name",
                     isDefaultRequiredValue: "This is a required field"
@@ -338,7 +338,7 @@ class IntentFormPage extends React.Component {
                   name="responseTypeValue"
                   onChange={this.handleResponseChange}
                   fullWidth={true}
-                  value={intent.responseType ? intent.responseType : ""}
+                  value={this.props.intentList && this.props.intentList[this.props.routeParams.id - 1] && this.props.intentList[this.props.routeParams.id - 1].response.responseType ? this.props.intentList[this.props.routeParams.id - 1].response.responseType : ""}
                   style={styles.customWidth}
                   validations={{
                     isWords: true
@@ -367,10 +367,7 @@ class IntentFormPage extends React.Component {
                     name="text"
                     onChange={this.handleChange}
                     fullWidth={true}
-                    value={intent.text ? intent.text : ""}
-                    validations={{
-                      isWords: true
-                    }}
+                    value={this.props.intentList && this.props.intentList[this.props.routeParams.id - 1] && this.props.intentList[this.props.routeParams.id - 1].text ? this.props.intentList[this.props.routeParams.id - 1].text : ""}
                     validationErrors={{
                       isWords: "Please provide valid text name",
                       isDefaultRequiredValue: "This is a required field"
@@ -392,7 +389,7 @@ class IntentFormPage extends React.Component {
                       name="imageUrl"
                       onChange={this.handleChange}
                       fullWidth={true}
-                      value={intent.imageUrl ? intent.imageUrl : ""}
+                      value={this.props.intentList && this.props.intentList[this.props.routeParams.id - 1] && this.props.intentList[this.props.routeParams.id - 1].imageUrl ? this.props.intentList[this.props.routeParams.id - 1].imageUrl : ""}
                       validationErrors={{
                         isWords: "Please provide valid image url name",
                         isDefaultRequiredValue: "This is a required field"
@@ -406,10 +403,7 @@ class IntentFormPage extends React.Component {
                       name="cardTitle"
                       onChange={this.handleChange}
                       fullWidth={true}
-                      value={intent.cardTitle ? intent.cardTitle : ""}
-                      validations={{
-                        isWords: true
-                      }}
+                      value={this.props.intentList && this.props.intentList[this.props.routeParams.id - 1] && this.props.intentList[this.props.routeParams.id - 1].cardTitle ? this.props.intentList[this.props.routeParams.id - 1].cardTitle : ""}
                       validationErrors={{
                         isWords: "Please provide valid card title name",
                         isDefaultRequiredValue: "This is a required field"
@@ -424,7 +418,7 @@ class IntentFormPage extends React.Component {
                       name="cardSubtitle"
                       onChange={this.handleChange}
                       fullWidth={true}
-                      value={intent.cardSubtitle ? intent.cardSubtitle : ""}
+                      value={this.props.intentList && this.props.intentList[this.props.routeParams.id - 1] && this.props.intentList[this.props.routeParams.id - 1].cardSubtitle ? this.props.intentList[this.props.routeParams.id - 1].cardSubtitle : ""}
                       validationErrors={{
                         isWords: "Please provide valid card subtitle name",
                         isDefaultRequiredValue: "This is a required field"
@@ -438,10 +432,7 @@ class IntentFormPage extends React.Component {
                       name="buttonTitle"
                       onChange={this.handleChange}
                       fullWidth={true}
-                      value={intent.buttonTitle ? intent.buttonTitle : ""}
-                      validations={{
-                        isWords: true
-                      }}
+                      value={this.props.intentList && this.props.intentList[this.props.routeParams.id - 1] && this.props.intentList[this.props.routeParams.id - 1].buttonTitle ? this.props.intentList[this.props.routeParams.id - 1].buttonTitle : ""}
                       validationErrors={{
                         isWords: "Please provide valid button title name",
                         isDefaultRequiredValue: "This is a required field"
@@ -457,7 +448,7 @@ class IntentFormPage extends React.Component {
                       name="imageUrl"
                       onChange={this.handleChange}
                       fullWidth={true}
-                      value={intent.imageUrl ? intent.imageUrl : ""}
+                      value={this.props.intentList && this.props.intentList[this.props.routeParams.id - 1] && this.props.intentList[this.props.routeParams.id - 1].imageUrl ? this.props.intentList[this.props.routeParams.id - 1].imageUrl : ""}
                       validationErrors={{
                         isWords: "Please provide valid image url name",
                         isDefaultRequiredValue: "This is a required field"
@@ -471,7 +462,7 @@ class IntentFormPage extends React.Component {
                       name="title"
                       onChange={this.handleChange}
                       fullWidth={true}
-                      value={intent.title ? intent.title : ""}
+                      value={this.props.intentList && this.props.intentList[this.props.routeParams.id - 1] && this.props.intentList[this.props.routeParams.id - 1].title ? this.props.intentList[this.props.routeParams.id - 1].title : ""}
                       validationErrors={{
                         isWords: "Please provide valid title name",
                         isDefaultRequiredValue: "This is a required field"
