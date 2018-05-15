@@ -219,8 +219,20 @@ class IntentListPage extends React.Component {
         intentName: {
           width: "20%"
         },
+        responseType: {
+          width: "20%"
+        },
         response: {
           width: "20%"
+        },
+        intentNameTag: {
+          width: "20%"
+        },
+        responseTypeTag: {
+          width: "25%"
+        },
+        responseTag: {
+          width: "30%"
         },
         price: {
           width: "20%",
@@ -230,7 +242,7 @@ class IntentListPage extends React.Component {
           width: "20%"
         },
         edit: {
-          width: "20%"
+          width: "10%"
         }
       },
       dialog: {
@@ -298,11 +310,14 @@ class IntentListPage extends React.Component {
                   Bot
                 </TableHeaderColumn>
                 {/*<TableHeaderColumn style={styles.columns.name}>Price</TableHeaderColumn>*/}
-                <TableHeaderColumn style={styles.columns.intentName}>
+                <TableHeaderColumn style={styles.columns.intentNameTag}>
                   Intent's name
                 </TableHeaderColumn>
                 {/*<TableHeaderColumn style={styles.columns.category}>Status</TableHeaderColumn>*/}
-                <TableHeaderColumn style={styles.columns.name}>
+                <TableHeaderColumn style={styles.columns.responseTypeTag}>
+                  Response type
+                </TableHeaderColumn>
+                <TableHeaderColumn style={styles.columns.responseTag}>
                   Response
                 </TableHeaderColumn>
               </TableRow>
@@ -320,6 +335,9 @@ class IntentListPage extends React.Component {
                   </TableRowColumn>
                   <TableRowColumn style={styles.columns.intentName}>
                     {item.intentName}
+                  </TableRowColumn>
+                  <TableRowColumn style={styles.columns.responseType}>
+                    {item.response.responseType}
                   </TableRowColumn>
                   <TableRowColumn style={styles.columns.response}>
                     {item.response.text || item.response.imageUrl && <div><img src={ item.response.imageUrl} style={{width: 100, height: 100}}/></div> || item.response.title}

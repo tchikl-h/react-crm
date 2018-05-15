@@ -22,17 +22,17 @@
   ],
   "intents": [
     {
-      "intentName": "Welcome",
-      "bot": "Lilou",
       "response": {
         "imageUrl": "https://media.giphy.com/media/3oKIPsx2VAYAgEHC12/giphy.gif",
         "cardTitle": "Hello",
-        "cardSubtitle": "dog waving",
+        "cardSubtitle": "Dog waving",
         "responseType": "Card"
       },
       "id": "1",
       "nb": "1",
-      "botId": "1"
+      "botId": "1",
+      "bot": "Lilou",
+      "intentName": "Welcome"
     },
     {
       "bot": "Lilou",
@@ -46,17 +46,18 @@
       "intentName": "Goodbye"
     },
     {
-      "intentName": "Fallback",
-      "bot": "Lilou",
       "response": {
         "responseType": "Quick replies",
-        "title": "Je n'ai pas compris, avez-vous un soucis ?",
+        "title": "Je n'ai pas compris, vous allez bien ?",
         "response1": "oui",
-        "response2": "non"
+        "response2": "non",
+        "response3": "un peu"
       },
       "id": "3",
       "nb": "1",
-      "botId": "1"
+      "botId": "1",
+      "bot": "Lilou",
+      "intentName": "Fallback"
     }
   ],
   "products": [

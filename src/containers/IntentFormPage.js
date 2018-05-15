@@ -27,6 +27,7 @@ import CircularProgress from "material-ui/CircularProgress";
 import autoBind from "react-autobind";
 import FloatingActionButton from "material-ui/FloatingActionButton";
 let botName;
+let dep = 0;
 class IntentFormPage extends React.Component {
   constructor(props) {
     super(props);
@@ -41,6 +42,18 @@ class IntentFormPage extends React.Component {
       name: '',
       shareholders: [{ name: '' }],
     };
+    if (this.props.intentList[this.props.routeParams.id - 1].response) {
+      for (var response in this.props.intentList[this.props.routeParams.id - 1].response) {
+        if (this.state.shareholders[0] && this.state.shareholders[0].name === '') {
+          this.state.shareholders.splice(0, 1);
+        }
+        if (/^response[0-9]/.test(response)) {
+          console.log("=>"+this.props.intentList[this.props.routeParams.id - 1].response[response]);
+          this.state.shareholders = this.state.shareholders.concat([{ name: this.props.intentList[this.props.routeParams.id - 1].response[response] }]);
+        }
+      }
+    }
+    console.log(this.state.shareholders);
 
     // autobind(this);
     // this.handleChange = this.handleChange.bind(this);
@@ -101,31 +114,31 @@ class IntentFormPage extends React.Component {
     console.error("Form error:", data);
   }
 
+  setResponse(field) {
+    this.state.intent.response[field] = this.state.intent[field];
+    delete this.state.intent[field];
+    if (!this.state.intent.response[field]) {
+      this.state.intent.response[field] = this.props.intentList[this.props.routeParams.id - 1].response[field];
+    }
+  }
+
   handleClick(event, action) {
     event.preventDefault();
     console.log(event);
     this.state.intent.response = {};
     this.state.intent.response.text = this.state.intent.text;
-    this.state.intent.response.imageUrl = this.state.intent.imageUrl;
-    this.state.intent.response.cardTitle = this.state.intent.cardTitle;
-    this.state.intent.response.cardSubtitle = this.state.intent.cardSubtitle;
-    this.state.intent.response.buttonTitle = this.state.intent.buttonTitle;
-    this.state.intent.response.responseType = this.state.responseTypeValue;
-    this.state.intent.response.title = this.state.intent.title;
-    if (this.state.shareholders[0].name !== "") {
+    this.setResponse("imageUrl");
+    this.setResponse("cardTitle");
+    this.setResponse("cardSubtitle");
+    this.setResponse("buttonTitle");
+    this.setResponse("responseType");
+    this.setResponse("title");
+    this.setResponse("text");
+    if (this.state.shareholders[0] && this.state.shareholders[0].name !== "") {
       this.state.shareholders.map((shareholder, idx) => (
         this.state.intent.response[`response${idx + 1}`] = shareholder.name
       )); 
     }
-    
-    delete this.state.intent.text;
-    delete this.state.intent.Response;
-    delete this.state.intent.imageUrl;
-    delete this.state.intent.cardTitle;
-    delete this.state.intent.cardSubtitle;
-    delete this.state.intent.buttonTitle;
-    delete this.state.intent.responseType;
-    delete this.state.intent.title;
     if (action && action === "AddProduct") {
       this.setState({ open: true });
     } else {
@@ -133,6 +146,7 @@ class IntentFormPage extends React.Component {
         this.state.intent.id = this.props.intentList[this.props.routeParams.id - 1].id;
         this.state.intent.nb = this.props.intentList[this.props.routeParams.id - 1].nb;
         this.state.intent.botId = this.props.intentList[this.props.routeParams.id - 1].botId;
+        this.state.intent.bot = this.props.botList[this.props.routeParams.nb - 1].name;
         if ( this.props.intentList[this.props.routeParams.id - 1].intentName) {
           this.state.intent.intentName = this.props.intentList[this.props.routeParams.id - 1].intentName;
         }
@@ -158,7 +172,6 @@ class IntentFormPage extends React.Component {
   handleChange(event, date) {
     const field = event ? event.target.name : null;
     const { intent } = this.state;
-
     if (intent) {
       if (typeof date === "object") {
         let intent = Object.assign({}, intent);
@@ -166,6 +179,7 @@ class IntentFormPage extends React.Component {
         this.setState({ intent: intent });
         this.enableButton();
       } else if (event && event.target && field) {
+        dep++;
         let _intent = Object.assign({}, intent);
         _intent[field] = event.target.value;
         this.setState({ intent: _intent });
@@ -338,6 +352,7 @@ class IntentFormPage extends React.Component {
                   floatingLabelText="Response type"
                   name="responseTypeValue"
                   onChange={this.handleResponseChange}
+                  onValid={this.handleChange}
                   fullWidth={true}
                   value={this.props.intentList && this.props.intentList[this.props.routeParams.id - 1] && this.props.intentList[this.props.routeParams.id - 1].response.responseType ? this.props.intentList[this.props.routeParams.id - 1].response.responseType : ""}
                   style={styles.customWidth}
@@ -388,9 +403,9 @@ class IntentFormPage extends React.Component {
                       hintText="Enter image URL"
                       floatingLabelText="Enter image URL"
                       name="imageUrl"
+                      value={this.props.intentList && this.props.intentList[this.props.routeParams.id - 1] && this.props.intentList[this.props.routeParams.id - 1].response.imageUrl ? this.props.intentList[this.props.routeParams.id - 1].response.imageUrl : ""}
                       onChange={this.handleChange}
                       fullWidth={true}
-                      value={this.props.intentList && this.props.intentList[this.props.routeParams.id - 1] && this.props.intentList[this.props.routeParams.id - 1].response.imageUrl ? this.props.intentList[this.props.routeParams.id - 1].response.imageUrl : ""}
                       validationErrors={{
                         isWords: "Please provide valid image url name",
                         isDefaultRequiredValue: "This is a required field"
