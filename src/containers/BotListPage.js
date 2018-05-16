@@ -316,7 +316,6 @@ class BotListPage extends React.Component {
               stripedRows={this.state.stripedRows}
             >
               {this.state.pageOfItems.map(item => (
-                // +"/intent/"+ intentList.filter(intent => intent.bot === botList[item.id - 1].name).length
                 <TableRow key={item.id}>
                 <Link className="button" to={"/bot/" + item.id + "/intents"}>
                     <FloatingActionButton
@@ -462,7 +461,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     getAllBots: filters => dispatch(loadBots(filters)),
-    getAllIntents: (filters, nb) => dispatch(loadIntents(filters, nb)),
+    getAllIntents: (filters, nb) => dispatch(loadIntents(filters, nb, true)),
     deleteBot: id => dispatch(deleteBot(id))
   };
 }

@@ -41,14 +41,16 @@ class IntentFormPage extends React.Component {
       intent: [{nb: ""}],
       name: '',
       shareholders: [{ name: '' }],
+      search: {
+        product: ""
+      }
     };
-    if (this.props.intentList[this.props.routeParams.id - 1].response) {
+    if (this.props.intentList[this.props.routeParams.id - 1] && this.props.intentList[this.props.routeParams.id - 1].response) {
       for (var response in this.props.intentList[this.props.routeParams.id - 1].response) {
         if (this.state.shareholders[0] && this.state.shareholders[0].name === '') {
           this.state.shareholders.splice(0, 1);
         }
         if (/^response[0-9]/.test(response)) {
-          console.log("=>"+this.props.intentList[this.props.routeParams.id - 1].response[response]);
           this.state.shareholders = this.state.shareholders.concat([{ name: this.props.intentList[this.props.routeParams.id - 1].response[response] }]);
         }
       }
@@ -75,6 +77,7 @@ class IntentFormPage extends React.Component {
       this.props.getCategoryList();
     } else {
       this.props.newIntent();
+      this.props.getAllIntents(this.state.search, this.props.routeParams.nb);
     }
   }
 
@@ -114,11 +117,20 @@ class IntentFormPage extends React.Component {
     console.error("Form error:", data);
   }
 
-  setResponse(field) {
+  setResponse(field, types) {
     this.state.intent.response[field] = this.state.intent[field];
     delete this.state.intent[field];
-    if (!this.state.intent.response[field]) {
+    if (!this.state.intent.response[field] && this.props.intentList[this.props.routeParams.id - 1]) {
       this.state.intent.response[field] = this.props.intentList[this.props.routeParams.id - 1].response[field];
+    }
+    if (types.filter(type => type === this.state.responseTypeValue).length === 0) {
+      delete this.state.intent.response[field];
+    }
+  }
+
+  setIntent(field) {
+    if (!this.state.intent[field] && this.props.intentList[this.props.routeParams.id - 1]) {
+      this.state.intent[field] = this.props.intentList[this.props.routeParams.id - 1][field];
     }
   }
 
@@ -126,14 +138,15 @@ class IntentFormPage extends React.Component {
     event.preventDefault();
     console.log(event);
     this.state.intent.response = {};
-    this.state.intent.response.text = this.state.intent.text;
-    this.setResponse("imageUrl");
-    this.setResponse("cardTitle");
-    this.setResponse("cardSubtitle");
-    this.setResponse("buttonTitle");
-    this.setResponse("responseType");
-    this.setResponse("title");
-    this.setResponse("text");
+    this.state.intent.response.text = this.state.intent.text; // "Text response" "Image" "Card" "Quick replies"
+    this.setResponse("imageUrl", ["Card", "Image"]);
+    this.setResponse("cardTitle", ["Card"]);
+    this.setResponse("cardSubtitle", ["Card"]);
+    this.setResponse("buttonTitle", ["Card"]);
+    this.setResponse("title", ["Quick replies"]);
+    this.setResponse("text", ["Text response"]);
+    this.setIntent("intentName");
+    this.state.intent.response.responseType = this.state.responseTypeValue;
     if (this.state.shareholders[0] && this.state.shareholders[0].name !== "") {
       this.state.shareholders.map((shareholder, idx) => (
         this.state.intent.response[`response${idx + 1}`] = shareholder.name
@@ -147,14 +160,11 @@ class IntentFormPage extends React.Component {
         this.state.intent.nb = this.props.intentList[this.props.routeParams.id - 1].nb;
         this.state.intent.botId = this.props.intentList[this.props.routeParams.id - 1].botId;
         this.state.intent.bot = this.props.botList[this.props.routeParams.nb - 1].name;
-        if ( this.props.intentList[this.props.routeParams.id - 1].intentName) {
-          this.state.intent.intentName = this.props.intentList[this.props.routeParams.id - 1].intentName;
-        }
         this.props.updateIntent(this.state.intent);
       }
       else {
         this.state.intent.bot = this.props.botList[this.props.routeParams.nb - 1].name;
-        this.state.intent.id = this.props.intentList[0] ? (parseInt(this.props.intentList[this.props.intentList.length - 1].id) + 1).toString() : "1";
+        this.state.intent.id = this.props.intentList ? (parseInt(this.props.intentList[this.props.intentList.length - 1].id) + 1).toString() : "1";
         this.state.intent.nb = this.props.routeParams.nb;
         if (this.state.intent.id) {
           this.props.addIntent(this.state.intent);
@@ -222,7 +232,10 @@ class IntentFormPage extends React.Component {
   }
 
   handleResponseChange(event, index, values) {
-    this.setState({ responseTypeValue: index });
+    this.setState(
+      { responseTypeValue: index },
+      { responseType: index }
+    );
   }
 
   handleProductChange(event, index, values) {
@@ -350,9 +363,8 @@ class IntentFormPage extends React.Component {
                 <FormsySelect
                   hintText="Response type"
                   floatingLabelText="Response type"
-                  name="responseTypeValue"
+                  name="responseType"
                   onChange={this.handleResponseChange}
-                  onValid={this.handleChange}
                   fullWidth={true}
                   value={this.props.intentList && this.props.intentList[this.props.routeParams.id - 1] && this.props.intentList[this.props.routeParams.id - 1].response.responseType ? this.props.intentList[this.props.routeParams.id - 1].response.responseType : ""}
                   style={styles.customWidth}
@@ -534,59 +546,6 @@ class IntentFormPage extends React.Component {
             </div>
             {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
 
-            <Dialog
-              title="Add Product"
-              open={this.state.open}
-              contentStyle={styles.dialog}
-              ignoreBackdropClick
-              ignoreEscapeKeyUp
-              maxWidth="xs"
-            >
-              <div>
-                <FormsySelect
-                  floatingLabelText="Categories"
-                  // onChange={this.handleChange}
-                  style={styles.customWidth}
-                  name="categoryId"
-                  onChange={this.handleCategoryChange}
-                >
-                  {categoryList.map((category, index) => (
-                    <MenuItem
-                      key={index}
-                      value={category.id}
-                      style={styles.menuItem}
-                      primaryText={category.categoryName}
-                    />
-                  ))}
-                </FormsySelect>
-
-                <FormsySelect
-                  floatingLabelText="Products"
-                  // onChange={this.handleChange}
-                  style={styles.customWidth}
-                  name="categoryId"
-                  onChange={this.handleProductChange}
-                >
-                  {productList.map((product, index) => (
-                    <MenuItem
-                      key={index}
-                      value={product.id}
-                      style={styles.menuItem}
-                      primaryText={product.productName}
-                    />
-                  ))}
-                </FormsySelect>
-
-                <span>
-                  <RaisedButton onClick={this.handleCancel} color="primary">
-                    Cancel
-                  </RaisedButton>
-                  <RaisedButton onClick={this.handleOk} color="primary">
-                    Ok
-                  </RaisedButton>
-                </span>
-              </div>
-            </Dialog>
           </Formsy.Form>
         </PageBase>
       );
@@ -652,7 +611,7 @@ function mapDispatchToProps(dispatch) {
     getCategoryList: () => dispatch(loadCategories()),
     getProductList: filters => dispatch(loadProducts(filters)),
     getAllBots: () => dispatch(loadBots()),
-    getAllIntents: (filters, nb) => dispatch(loadIntents(filters, nb)),
+    getAllIntents: (filters, nb) => dispatch(loadIntents(filters, nb, false)),
   };
 }
 

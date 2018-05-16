@@ -54,6 +54,8 @@ class IntentListPage extends React.Component {
       deselectOnClickaway: true,
       showCheckboxes: false,
       pageOfItems: [],
+      currentPage: -1,
+      nbPage: 0,
       intentNb: null,
       dialogText: "Are you sure to do this?",
       search: {
@@ -85,10 +87,11 @@ class IntentListPage extends React.Component {
 
   /* eslint-disable */
   componentDidUpdate(prevProps, prevState) {
-    // reset page if items array has changed
+    // reset page if items array has change
     if (this.props.intentList !== prevProps.intentList) {
+      // this.setState({ nbPage: this.state.nbPage + 1 });
       //this.setPage(this.props.initialPage);
-      this.onChangePage(this.props.intentList.slice(0, 5));
+      this.onChangePage(this.props.intentList.slice(0, 5), -1);
     }
   }
 
@@ -107,7 +110,10 @@ class IntentListPage extends React.Component {
     }
   }
 
-  onChangePage(pageOfItems) {
+  onChangePage(pageOfItems, currentPage) {
+    if (currentPage !== -1) {
+      this.setState({currentPage: currentPage});
+    }
     if (
       !this.props.isFetching &&
       this.state.pageOfItems &&
@@ -328,7 +334,7 @@ class IntentListPage extends React.Component {
               showRowHover={this.state.showRowHover}
               stripedRows={this.state.stripedRows}
             >
-              {this.state.pageOfItems.filter(item => botList && botList[this.props.routeParams.nb - 1] && item.bot === botList[this.props.routeParams.nb - 1].name).map(item => (
+              {this.state.pageOfItems.map((item, index) => (
                 <TableRow key={item.id}>
                   <TableRowColumn style={styles.columns.bot}>
                     {item.bot}
@@ -343,7 +349,7 @@ class IntentListPage extends React.Component {
                     {item.response.text || item.response.imageUrl && <div><img src={ item.response.imageUrl} style={{width: 100, height: 100}}/></div> || item.response.title}
                   </TableRowColumn>
                   <TableRowColumn style={styles.columns.edit}>
-                    <Link className="button" to={"/bot/"+item.nb+"/intent/"+item.id}>
+                    <Link className="button" to={"/bot/"+item.nb+"/intent/"+((this.state.currentPage - 1) * 5 + index + 1)}>
                       <FloatingActionButton
                         zDepth={0}
                         mini={true}
@@ -457,7 +463,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     getAllBots: filters => dispatch(loadBots(filters)),
-    getAllIntents: (filters, nb) => dispatch(loadIntents(filters, nb)),
+    getAllIntents: (filters, nb) => dispatch(loadIntents(filters, nb, true)),
     deleteIntent: (id, nb) => dispatch(deleteIntent(id, nb))
   };
 }

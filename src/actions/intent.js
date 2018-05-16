@@ -20,10 +20,14 @@ import {
 
 // Intent actions
 
-export function loadIntents(filters, nb) {
+export function loadIntents(filters, nb, mode) {
+  let endpoint = `intents?_expand=intentName`;
+  if (mode == true) {
+    endpoint = `bot/${nb}/intents?_expand=intentName`;
+  }
   return {
     [CALL_API]: {
-      endpoint: `bot/${nb}/intents?_expand=intentName`,
+      endpoint: endpoint,
       intents: [],
       filters: filters,
       types: [LOAD_INTENTS_REQUEST, LOAD_INTENTS_SUCCESS, LOAD_INTENTS_FAILURE]

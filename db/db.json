@@ -15,9 +15,9 @@
       "name": "Lilou"
     },
     {
-      "description": "bot LVA",
+      "name": "LVA",
       "id": 2,
-      "name": "LVA"
+      "description": "bot LVA"
     }
   ],
   "intents": [
@@ -53,11 +53,149 @@
         "response2": "non",
         "response3": "un peu"
       },
+      "intentName": "Mood",
       "id": "3",
       "nb": "1",
       "botId": "1",
+      "bot": "Lilou"
+    },
+    {
+      "intentName": "a",
+      "bot": "LVA",
+      "response": {
+        "text": "a"
+      },
+      "id": "4",
+      "nb": "2",
+      "botId": "2"
+    },
+    {
+      "intentName": "b",
+      "bot": "LVA",
+      "response": {
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Kiwi_%28Actinidia_chinensis%29_1_Luc_Viatour.jpg/1200px-Kiwi_%28Actinidia_chinensis%29_1_Luc_Viatour.jpg"
+      },
+      "id": "5",
+      "nb": "2",
+      "botId": "2"
+    },
+    {
+      "intentName": "c",
+      "bot": "LVA",
+      "response": {
+        "imageUrl": "c",
+        "cardTitle": "c",
+        "cardSubtitle": "c",
+        "buttonTitle": "c"
+      },
+      "id": "6",
+      "nb": "2",
+      "botId": "2"
+    },
+    {
       "bot": "Lilou",
-      "intentName": "Fallback"
+      "response": {
+        "imageUrl": "azd",
+        "cardTitle": "daz",
+        "responseType": "Card"
+      },
+      "intentName": "a",
+      "id": "7",
+      "nb": "1",
+      "botId": "1"
+    },
+    {
+      "response": {
+        "text": "b",
+        "imageUrl": "a",
+        "cardTitle": "a",
+        "responseType": "Card"
+      },
+      "intentName": "b",
+      "id": "8",
+      "nb": "1",
+      "botId": "1",
+      "bot": "Lilou"
+    },
+    {
+      "intentName": "c",
+      "bot": "Lilou",
+      "response": {
+        "text": "c"
+      },
+      "id": "9",
+      "nb": "1",
+      "botId": "1"
+    },
+    {
+      "intentName": "d",
+      "bot": "LVA",
+      "response": {
+        "text": "d"
+      },
+      "id": "10",
+      "nb": "2",
+      "botId": "2"
+    },
+    {
+      "response": {
+        "text": "e"
+      },
+      "intentName": "e",
+      "id": "11",
+      "nb": "1",
+      "botId": "1",
+      "bot": "Lilou"
+    },
+    {
+      "intentName": "f",
+      "bot": "Lilou",
+      "response": {
+        "text": "f"
+      },
+      "id": "12",
+      "nb": "1",
+      "botId": "1"
+    },
+    {
+      "intentName": "e",
+      "bot": "LVA",
+      "response": {
+        "text": "e"
+      },
+      "id": "13",
+      "nb": "2",
+      "botId": "2"
+    },
+    {
+      "intentName": "g",
+      "bot": "LVA",
+      "response": {
+        "text": "g"
+      },
+      "id": "14",
+      "nb": "2",
+      "botId": "2"
+    },
+    {
+      "intentName": "h",
+      "bot": "LVA",
+      "response": {
+        "text": "h"
+      },
+      "id": "15",
+      "nb": "2",
+      "botId": "2"
+    },
+    {
+      "intentName": "i",
+      "bot": "Lilou",
+      "response": {
+        "text": "i"
+      },
+      "id": "16",
+      "nb": "1",
+      "botId": "1"
     }
   ],
   "products": [
