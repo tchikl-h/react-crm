@@ -158,24 +158,26 @@
       "botId": "1"
     },
     {
-      "intentName": "e",
-      "bot": "LVA",
       "response": {
-        "text": "e"
+        "text": "e",
+        "responseType": "Text response"
       },
+      "intentName": "e",
       "id": "13",
       "nb": "2",
-      "botId": "2"
+      "botId": "2",
+      "bot": "LVA"
     },
     {
-      "intentName": "g",
-      "bot": "LVA",
       "response": {
-        "text": "g"
+        "text": "g",
+        "responseType": "Text response"
       },
+      "intentName": "g",
       "id": "14",
       "nb": "2",
-      "botId": "2"
+      "botId": "2",
+      "bot": "LVA"
     },
     {
       "intentName": "h",

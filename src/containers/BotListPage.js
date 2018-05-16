@@ -401,20 +401,11 @@ class BotListPage extends React.Component {
             />
 
             <TextField
-              hintText="First Name"
-              floatingLabelText="First Name"
+              hintText="Name"
+              floatingLabelText="Name"
               name="name"
               fullWidth={true}
               value={this.state.search.name}
-              onChange={this.handleSearchFilter}
-            />
-
-            <TextField
-              hintText="Last Name"
-              floatingLabelText="Last Name"
-              fullWidth={true}
-              name="timezone"
-              value={this.state.search.timezone}
               onChange={this.handleSearchFilter}
             />
           </Drawer>

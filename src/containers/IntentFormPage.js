@@ -372,8 +372,10 @@ class IntentFormPage extends React.Component {
                     isWords: true
                   }}
                   validationErrors={{
-                    isWords: "Please provide valid response type name"
+                    isWords: "Please provide valid response type name",
+                    isDefaultRequiredValue: "This is a required field"
                   }}
+                  required
                 >
                   {
                     responseType.map((responsetype, index) => (

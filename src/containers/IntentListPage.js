@@ -59,7 +59,9 @@ class IntentListPage extends React.Component {
       intentNb: null,
       dialogText: "Are you sure to do this?",
       search: {
-        product: ""
+        intent: {
+          intentName: ""
+        }
       },
       searchBot: {
         name: ""
@@ -413,11 +415,11 @@ class IntentListPage extends React.Component {
             />
 
             <TextField
-              hintText="Product"
-              floatingLabelText="Product"
-              name="product"
+              hintText="Intent's name"
+              floatingLabelText="Intent's name"
+              name="intentName"
               fullWidth={true}
-              value={this.state.search.product}
+              value={this.state.search.intentName}
               onChange={this.handleSearchFilter}
             />
           </Drawer>
